@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.AspNetCore.Identity.RavenDb
+namespace Maqduni.AspNetCore.Identity.RavenDb
 {
     /// <summary>
     /// Represents a login and its associated provider for a user.

@@ -10,12 +10,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Internal;
-using AspNetCore.Identity.RavenDb;
 using Raven.Client;
 using Raven.Abstractions.Exceptions;
 using Raven.Client.UniqueConstraints;
 
-namespace Microsoft.AspNetCore.Identity.RavenDb
+namespace Maqduni.AspNetCore.Identity.RavenDb
 {
     /// <summary>
     /// Creates a new instance of a persistence store for roles.

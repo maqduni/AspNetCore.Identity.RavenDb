@@ -5,7 +5,7 @@ using Raven.Client.UniqueConstraints;
 using System;
 using System.Collections.Generic;
 
-namespace Microsoft.AspNetCore.Identity.RavenDb
+namespace Maqduni.AspNetCore.Identity.RavenDb
 {
     /// <summary>
     /// Represents a user in the identity system

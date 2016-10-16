@@ -12,12 +12,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Internal;
 using Raven.Client;
 using Raven.Client.Document;
-using AspNetCore.Identity.RavenDb;
+using Maqduni.AspNetCore.Identity.RavenDb;
 using Raven.Client.Document.Async;
 using Raven.Abstractions.Exceptions;
 using Raven.Client.UniqueConstraints;
+using Microsoft.AspNetCore.Identity;
 
-namespace Microsoft.AspNetCore.Identity.RavenDb
+namespace Maqduni.AspNetCore.Identity.RavenDb
 {
     ///// <summary>
     ///// Represents a new instance of a persistence store for users, using the default implementation

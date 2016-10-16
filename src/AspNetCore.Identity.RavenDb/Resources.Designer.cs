@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AspNetCore.Identity.RavenDb {
+namespace Maqduni.AspNetCore.Identity.RavenDb {
     using System;
     using System.Reflection;
     

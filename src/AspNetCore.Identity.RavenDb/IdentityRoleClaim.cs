@@ -4,7 +4,7 @@
 using System;
 using System.Security.Claims;
 
-namespace Microsoft.AspNetCore.Identity.RavenDb
+namespace Maqduni.AspNetCore.Identity.RavenDb
 {
     /// <summary>
     /// Represents a claim that is granted to all users within a role.
