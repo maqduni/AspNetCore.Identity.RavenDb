@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "Microsoft.AspNetCore.Identity": "1.0.0",
+    "Microsoft.Extensions.DependencyInjection": "1.0.0",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
+    "NETStandard.Library": "1.6.0",
+    "RavenDB.Client": "3.5.0-rc-35173",
+    "RavenDB.Client.UniqueConstraints": "3.5.0-rc-35173",
+    "System.Security.Claims": "4.0.1"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}
