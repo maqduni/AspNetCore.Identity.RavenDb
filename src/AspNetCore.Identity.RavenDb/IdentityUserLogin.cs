@@ -8,7 +8,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// <summary>
     /// Represents a login and its associated provider for a user.
     /// </summary>
-    /// <typeparam name="TKey">The type of the primary key of the user associated with this login.</typeparam>
     public class IdentityUserLogin
     {
         /// <summary>

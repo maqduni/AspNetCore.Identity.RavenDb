@@ -21,16 +21,15 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// </summary>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
     /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
-    /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
     public class RoleStore<TRole> : RoleStore<TRole, IdentityRoleClaim>
         where TRole : IdentityRole<IdentityRoleClaim>
     {
         /// <summary>
-        /// Constructs a new instance of <see cref="RoleStore{TRole, TContext, TKey}"/>.
+        /// Constructs a new instance of <see cref="RoleStore{TRole, TContext}"/>.
         /// </summary>
         /// <param name="context">The <see cref="DbContext"/>.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public RoleStore(IdentityErrorDescriber describer = null) : base(describer) { }
+        public RoleStore(IAsyncDocumentSession context, IdentityErrorDescriber describer = null) : base(context, describer) { }
 
         /// <summary>
         /// Creates a entity representing a role claim.
@@ -49,7 +48,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// </summary>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
     /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
-    /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
     /// <typeparam name="TUserRole">The type of the class representing a user role.</typeparam>
     /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
     public abstract class RoleStore<TRole, TRoleClaim> :
@@ -60,42 +58,44 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     {
         #region RavenDb
 
-        private IDocumentStore _store { get; set; }
-        private IAsyncDocumentSession _asyncSession { get; set; }
-
-        private void InitRaven()
+        /// <summary>
+        /// Retrieves the document entity key prefix based on RavenDb store conventions.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        private string GetDocumentKeyPrefix(object entity)
         {
-            _store = RavenDbStore.Current;
-            _asyncSession = _store.OpenAsyncSession();
-            _asyncSession.Advanced.UseOptimisticConcurrency = true;
+            var typeTagName = AsyncSession.Advanced.DocumentStore.Conventions.GetDynamicTagName(entity);
+            if (string.IsNullOrEmpty(typeTagName)) //ignore empty tags
+                return null;
+            var tag = AsyncSession.Advanced.DocumentStore.Conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
+            return tag;
         }
 
         #endregion
 
         /// <summary>
-        /// Constructs a new instance of <see cref="RoleStore{TRole, TContext, TKey, TUserRole, TRoleClaim}"/>.
+        /// Constructs a new instance of <see cref="RoleStore{TRole, TContext, TUserRole, TRoleClaim}"/>.
         /// </summary>
         /// <param name="context">The <see cref="DbContext"/>.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public RoleStore(IdentityErrorDescriber describer = null)
+        public RoleStore(IAsyncDocumentSession context, IdentityErrorDescriber describer = null)
         {
-            //if (context == null)
-            //{
-            //    throw new ArgumentNullException(nameof(context));
-            //}
-            //Context = context;
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            AsyncSession = context;
             ErrorDescriber = describer ?? new IdentityErrorDescriber();
-
-            InitRaven();
         }
 
         private bool _disposed;
 
 
-        ///// <summary>
-        ///// Gets the database context for this store.
-        ///// </summary>
-        //public TContext Context { get; private set; }
+        /// <summary>
+        /// Gets the database context for this store.
+        /// </summary>
+        public IAsyncDocumentSession AsyncSession { get; private set; }
 
         /// <summary>
         /// Gets or sets the <see cref="IdentityErrorDescriber"/> for any error that occurred with the current operation.
@@ -117,7 +117,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             if (AutoSaveChanges)
             {
-                await _asyncSession.SaveChangesAsync(cancellationToken);
+                await AsyncSession.SaveChangesAsync(cancellationToken);
             }
         }
 
@@ -135,7 +135,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            await _asyncSession.StoreAsync(role); //TODO: Possibly add the id as the second parameter to StoreAsync
+            await AsyncSession.StoreAsync(role); //TODO: Possibly add the id as the second parameter to StoreAsync
             await SaveChanges(cancellationToken);
             return IdentityResult.Success;
         }
@@ -183,7 +183,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            _asyncSession.Delete(role.Id);
+            AsyncSession.Delete(role.Id);
             try
             {
                 await SaveChanges(cancellationToken);
@@ -247,35 +247,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             role.Name = roleName;
             return Task.FromResult(0);
         }
-
-        ///// <summary>
-        ///// Converts the provided <paramref name="id"/> to a strongly typed key object.
-        ///// </summary>
-        ///// <param name="id">The id to convert.</param>
-        ///// <returns>An instance of <typeparamref name="TKey"/> representing the provided <paramref name="id"/>.</returns>
-        //public virtual TKey ConvertIdFromString(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return default(TKey);
-        //    }
-        //    return (TKey)TypeDescriptor.GetConverter(typeof(TKey)).ConvertFromInvariantString(id);
-        //}
-
-        ///// <summary>
-        ///// Converts the provided <paramref name="id"/> to its string representation.
-        ///// </summary>
-        ///// <param name="id">The id to convert.</param>
-        ///// <returns>An <see cref="string"/> representation of the provided <paramref name="id"/>.</returns>
-        //public virtual string ConvertIdToString(TKey id)
-        //{
-        //    if (id.Equals(default(TKey)))
-        //    {
-        //        return null;
-        //    }
-        //    return id.ToString();
-        //}
-
+        
         /// <summary>
         /// Finds the role who has the specified ID as an asynchronous operation.
         /// </summary>
@@ -286,7 +258,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            return _asyncSession.LoadAsync<TRole>(id, cancellationToken);
+            return AsyncSession.LoadAsync<TRole>(id, cancellationToken);
         }
 
         /// <summary>
@@ -299,7 +271,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            return _asyncSession.LoadByUniqueConstraintAsync<TRole>(u => u.Name, normalizedName);
+            return AsyncSession.LoadByUniqueConstraintAsync<TRole>(u => u.Name, normalizedName);
         }
 
         /// <summary>
@@ -354,7 +326,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         /// </summary>
         public void Dispose()
         {
-            _asyncSession.SaveChangesAsync().ContinueWith(t => _asyncSession.Dispose());
+            AsyncSession.SaveChangesAsync();
             _disposed = true;
         }
 
@@ -371,7 +343,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            return (await _asyncSession.Advanced.LoadStartingWithAsync<TRoleClaim>($"IdentityRoles/{role.Id}/IdentityRoleClaims/")).Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
+            return (await AsyncSession.Advanced.LoadStartingWithAsync<TRoleClaim>($"{role.Id}/IdentityRoleClaims/")).Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
         }
 
         /// <summary>
@@ -393,7 +365,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(nameof(claim));
             }
 
-            _asyncSession.StoreAsync(CreateRoleClaim(role, claim), $"IdentityRoles/{role.Id}/IdentityRoleClaims/{Guid.NewGuid()}");
+            AsyncSession.StoreAsync(CreateRoleClaim(role, claim), $"{role.Id}/IdentityRoleClaims/{Guid.NewGuid()}");
             return Task.FromResult(false);
         }
 
@@ -415,22 +387,12 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(claim));
             }
-            var claims = (await _asyncSession.Advanced.LoadStartingWithAsync<TRoleClaim>($"IdentityRoles/{role.Id}/IdentityRoleClaims/")).Where(c => c.ClaimValue == claim.Value);
+            var claims = (await AsyncSession.Advanced.LoadStartingWithAsync<TRoleClaim>($"{role.Id}/IdentityRoleClaims/")).Where(c => c.ClaimValue == claim.Value);
             foreach (var c in claims)
             {
-                _asyncSession.Delete(c);
+                AsyncSession.Delete(c);
             }
         }
-
-        ///// <summary>
-        ///// A navigation property for the roles the store contains.
-        ///// </summary>
-        //public virtual IQueryable<TRole> Roles
-        //{
-        //    get { return Context.Set<TRole>(); }
-        //}
-
-        //private List<TRoleClaim> RoleClaims { get { return null; } } //TODO: Implement, used to be Context.Set()
 
         /// <summary>
         /// Creates a entity representing a role claim.

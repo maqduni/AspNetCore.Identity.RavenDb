@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Maqduni.AspNetCore.Identity.RavenDb
 {
     /// <summary>
-    /// The default implementation of <see cref="IdentityRole{TKey}"/> which uses a string as the primary key.
+    /// The default implementation of <see cref="IdentityRole"/> which uses a string as the primary key.
     /// </summary>
     public class IdentityRole : IdentityRole<IdentityRoleClaim>
     {
@@ -39,19 +39,18 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// <summary>
     /// Represents a role in the identity system
     /// </summary>
-    /// <typeparam name="TKey">The type used for the primary key for the role.</typeparam>
     /// <typeparam name="TUserRole">The type used for user roles.</typeparam>
     /// <typeparam name="TRoleClaim">The type used for role claims.</typeparam>
     public class IdentityRole<TRoleClaim>
         where TRoleClaim : IdentityRoleClaim
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="IdentityRole{TKey}"/>.
+        /// Initializes a new instance of <see cref="IdentityRole"/>.
         /// </summary>
         public IdentityRole() { }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="IdentityRole{TKey}"/>.
+        /// Initializes a new instance of <see cref="IdentityRole"/>.
         /// </summary>
         /// <param name="roleName">The role name.</param>
         public IdentityRole(string roleName) : this()

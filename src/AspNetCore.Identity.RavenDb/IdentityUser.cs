@@ -10,26 +10,24 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// <summary>
     /// Represents a user in the identity system
     /// </summary>
-    /// <typeparam name="TKey">The type used for the primary key for the user.</typeparam>
     public class IdentityUser : IdentityUser<IdentityUserClaim, IdentityUserLogin>
     { }
 
     /// <summary>
     /// Represents a user in the identity system
     /// </summary>
-    /// <typeparam name="TKey">The type used for the primary key for the user.</typeparam>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
     /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     public class IdentityUser<TUserClaim, TUserLogin>
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="IdentityUser{TKey}"/>.
+        /// Initializes a new instance of <see cref="IdentityUser"/>.
         /// </summary>
         public IdentityUser() { }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="IdentityUser{TKey}"/>.
+        /// Initializes a new instance of <see cref="IdentityUser"/>.
         /// </summary>
         /// <param name="userName">The user name.</param>
         public IdentityUser(string userName) : this()
@@ -40,7 +38,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         /// <summary>
         /// Gets or sets the primary key for this user.
         /// </summary>
-        public virtual string Id { get; set; }
+        public virtual string Id { get; set; } // IdentityUsers/{guid}
 
         /// <summary>
         /// Gets or sets the user name for this user.

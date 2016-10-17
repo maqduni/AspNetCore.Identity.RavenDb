@@ -9,7 +9,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// <summary>
     /// Represents a claim that a user possesses. 
     /// </summary>
-    /// <typeparam name="TKey">The type used for the primary key for this user that possesses this claim.</typeparam>
     public class IdentityUserClaim
     {
         /// <summary>
