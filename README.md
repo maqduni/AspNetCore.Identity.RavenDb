@@ -1,1 +1,1 @@
-# AspNetCore.Identity.RavenDb
+# RavenDB user/role management store implementation for ASP.NET Core identity provider.

@@ -1,0 +1,38 @@
+{
+  "version": "1.3.8-*",
+  "name": "Maqduni.AspNetCore.Identity.RavenDb",
+  "description": "RavenDB user/role store management implementation for ASP.NET Core identity provider.",
+  "authors": [ "Iskandar Rafiev" ],
+
+  "packOptions": {
+    "releaseNotes": "Added ServiceCollection extensions for adding RavenDb store and async session in the configure services function of the Net Core app. Fixed incorrect id generation for classes inheriting from IdentityUser.",
+    "tags": [
+      "ravendb",
+      "aspnetcore",
+      "identity",
+      "membership"
+    ],
+    "projectUrl": "https://github.com/maqduni/AspNetCore.Identity.RavenDb",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/maqduni/AspNetCore.Identity.RavenDb"
+    }
+  },
+
+  "dependencies": {
+    "Microsoft.AspNetCore.Identity": "1.0.0",
+    "Microsoft.Extensions.DependencyInjection": "1.0.0",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
+    "NETStandard.Library": "1.6.0",
+    "RavenDB.Client": "3.5.0-rc-35173",
+    "RavenDB.Client.UniqueConstraints": "3.5.0-rc-35173",
+    "System.Security.Claims": "4.0.1"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

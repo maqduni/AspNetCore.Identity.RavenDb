@@ -10,11 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AspNetCore.Identity.RavenDb", "src\AspNetCore.Identity.RavenDb\AspNetCore.Identity.RavenDb.xproj", "{7CE40618-FD0C-4EF9-9D7E-D1C504B6ED6D}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Maqduni.AspNetCore.Identity.RavenDb", "src\Maqduni.AspNetCore.Identity.RavenDb\Maqduni.AspNetCore.Identity.RavenDb.xproj", "{7CE40618-FD0C-4EF9-9D7E-D1C504B6ED6D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7B042F2E-95A3-4BF9-A0C2-F94F32B370F5}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AspNetCore.Identity.RavenDb.Tests", "test\AspNetCore.Identity.RavenDb.Tests\AspNetCore.Identity.RavenDb.Tests.xproj", "{5A4B1801-5216-4429-8A1C-7A0F694CCD05}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Maqduni.AspNetCore.Identity.RavenDb.Tests", "test\Maqduni.AspNetCore.Identity.RavenDb.Tests\Maqduni.AspNetCore.Identity.RavenDb.Tests.xproj", "{5A4B1801-5216-4429-8A1C-7A0F694CCD05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
