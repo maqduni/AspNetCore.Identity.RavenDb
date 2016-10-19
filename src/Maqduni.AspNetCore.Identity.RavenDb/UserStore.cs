@@ -20,49 +20,19 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb
 {
-    ///// <summary>
-    ///// Represents a new instance of a persistence store for users, using the default implementation
-    ///// of <see cref="IdentityUser"/> with a string as a primary key.
-    ///// </summary>
-    //public class UserStore : UserStore<IdentityUser>
-    //{
-    //    /// <summary>
-    //    /// Constructs a new instance of <see cref="UserStore"/>.
-    //    /// </summary>
-    //    /// <param name="context">The <see cref="DbContext"/>.</param>
-    //    /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-    //    public UserStore(IdentityErrorDescriber describer = null) : base(describer) { }
-    //}
-
-    ///// <summary>
-    ///// Creates a new instance of a persistence store for the specified user type.
-    ///// </summary>
-    ///// <typeparam name="TUser">The type representing a user.</typeparam>
-    //public class UserStore<TUser> : UserStore<TUser, IdentityRole<IdentityRoleClaim>>
-    //    where TUser : IdentityUser, new()
-    //{
-    //    /// <summary>
-    //    /// Constructs a new instance of <see cref="UserStore{TUser}"/>.
-    //    /// </summary>
-    //    /// <param name="context">The <see cref="DbContext"/>.</param>
-    //    /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-    //    public UserStore(IdentityErrorDescriber describer = null) : base(describer) { }
-    //}
-
     /// <summary>
     /// Represents a new instance of a persistence store for the specified user and role types.
     /// </summary>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
     /// <typeparam name="TRole">The type representing a role.</typeparam>
-    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
     public class UserStore<TUser, TRole> : UserStore<TUser, TRole, IdentityUserClaim, IdentityUserLogin, IdentityUserToken, IdentityRoleClaim>
         where TUser : IdentityUser
         where TRole : IdentityRole<IdentityRoleClaim>
     {
         /// <summary>
-        /// Constructs a new instance of <see cref="UserStore{TUser, TRole, TContext}"/>.
+        /// Constructs a new instance of <see cref="UserStore{TUser, TRole}"/>.
         /// </summary>
-        /// <param name="context">The <see cref="DbContext"/>.</param>
+        /// <param name="context">The <see cref="IAsyncDocumentSession"/>.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
         public UserStore(IAsyncDocumentSession context, IdentityErrorDescriber describer = null) : base(context, describer) { }
 
@@ -124,9 +94,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// </summary>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
     /// <typeparam name="TRole">The type representing a role.</typeparam>
-    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
-    /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
     /// <typeparam name="TRoleClaim">The type representing a role claim.</typeparam>
@@ -139,7 +107,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         IUserEmailStore<TUser>,
         IUserLockoutStore<TUser>,
         IUserPhoneNumberStore<TUser>,
-        //IQueryableUserStore<TUser>,
         IUserTwoFactorStore<TUser>,
         IUserAuthenticationTokenStore<TUser>
         where TUser : IdentityUser<TUserClaim, TUserLogin>
@@ -168,8 +135,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         #endregion
 
         /// <summary>
-        /// Creates a new instance of <see cref="UserStore"/>.
+        /// Creates a new instance of <see cref="UserStore{TUser, TRole, TUserClaim, TUserLogin, TUserToken, TRoleClaim}"/>.
         /// </summary>
+        /// <param name="context">The <see cref="IAsyncDocumentSession"/>.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/> used to describe store errors.</param>
         public UserStore(IAsyncDocumentSession context, IdentityErrorDescriber describer = null)
         {

@@ -12,8 +12,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     {
         /// <summary>
         /// Gets or sets the of the primary key of the this login.
+        /// Format: IdentityUsers/{id}/IdentityUserLogins/{id}
         /// </summary>
-        public virtual string Id { get; set; } // IdentityUsers/{id}/IdentityUserLogins/{id}
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the login provider for the login (e.g. facebook, google)

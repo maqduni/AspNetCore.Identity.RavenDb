@@ -13,8 +13,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     {
         /// <summary>
         /// Gets or sets the identifier for this user claim.
+        /// Format: IdentityUsers/{guid}/IdentityUserClaims/{guid}
         /// </summary>
-        public virtual string Id { get; set; } // IdentityUsers/{guid}/IdentityUserClaims/{guid}
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the claim type for this claim.

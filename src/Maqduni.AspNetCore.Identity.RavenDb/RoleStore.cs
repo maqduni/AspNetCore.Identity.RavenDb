@@ -20,14 +20,13 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// Creates a new instance of a persistence store for roles.
     /// </summary>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
     public class RoleStore<TRole> : RoleStore<TRole, IdentityRoleClaim>
         where TRole : IdentityRole<IdentityRoleClaim>
     {
         /// <summary>
-        /// Constructs a new instance of <see cref="RoleStore{TRole, TContext}"/>.
+        /// Constructs a new instance of <see cref="RoleStore{TRole}"/>.
         /// </summary>
-        /// <param name="context">The <see cref="DbContext"/>.</param>
+        /// <param name="context">The <see cref="IAsyncDocumentSession"/>.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
         public RoleStore(IAsyncDocumentSession context, IdentityErrorDescriber describer = null) : base(context, describer) { }
 
@@ -47,11 +46,8 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// Creates a new instance of a persistence store for roles.
     /// </summary>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-    /// <typeparam name="TContext">The type of the data context class used to access the store.</typeparam>
-    /// <typeparam name="TUserRole">The type of the class representing a user role.</typeparam>
     /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
     public abstract class RoleStore<TRole, TRoleClaim> :
-        //IQueryableRoleStore<TRole>,
         IRoleClaimStore<TRole>
         where TRole : IdentityRole<TRoleClaim>
         where TRoleClaim : IdentityRoleClaim
@@ -75,9 +71,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         #endregion
 
         /// <summary>
-        /// Constructs a new instance of <see cref="RoleStore{TRole, TContext, TUserRole, TRoleClaim}"/>.
+        /// Constructs a new instance of <see cref="RoleStore{TRole, TRoleClaim}"/>.
         /// </summary>
-        /// <param name="context">The <see cref="DbContext"/>.</param>
+        /// <param name="context">The <see cref="IAsyncDocumentSession"/>.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
         public RoleStore(IAsyncDocumentSession context, IdentityErrorDescriber describer = null)
         {

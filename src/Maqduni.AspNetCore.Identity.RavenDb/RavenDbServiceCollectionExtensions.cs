@@ -85,22 +85,16 @@ namespace Maqduni.Extensions.DependencyInjection
         ///     </code>
         /// </example>
         /// <param name="serviceCollection"> The <see cref="IServiceCollection" /> to add services to. </param>
-        /// <param name="addRavenDbStore"> Registers an IDocumentStore service type by internally calling AddRavenDbStore(). </param>
-        /// <param name="connectionString"> The connection string to the Raven database instance. </param>
+        /// <param name="connectionString"> The connection string to the Raven database instance. If present an IDocumentStore service type is registered by internally calling AddRavenDbStore().</param>
         /// <returns>
         ///     The same service collection so that multiple calls can be chained.
         /// </returns>
         public static IServiceCollection AddRavenDbAsyncSession(
             this IServiceCollection serviceCollection,
-            bool addRavenDbStore = false,
             string connectionString = null)
         {
-            if (addRavenDbStore)
+            if (!string.IsNullOrEmpty(connectionString))
             {
-                if (string.IsNullOrEmpty(connectionString))
-                {
-                    throw new ArgumentNullException("Connection string cannot be null or empty.");
-                }
                 serviceCollection.AddRavenDbStore(connectionString, store => store.Listeners.RegisterListener(new UniqueConstraintsStoreListener()));
             }
 

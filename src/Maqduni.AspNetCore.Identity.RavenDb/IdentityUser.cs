@@ -17,7 +17,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// Represents a user in the identity system
     /// </summary>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
-    /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     public class IdentityUser<TUserClaim, TUserLogin>
     {
@@ -37,8 +36,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
 
         /// <summary>
         /// Gets or sets the primary key for this user.
+        /// Format: IdentityUsers/{guid}
         /// </summary>
-        public virtual string Id { get; set; } // IdentityUsers/{guid}
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the user name for this user.

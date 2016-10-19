@@ -70,8 +70,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
 
         /// <summary>
         /// Gets or sets the primary key for this role.
+        /// Format: IdentityRoles/{guid}
         /// </summary>
-        public virtual string Id { get; set; } // IdentityRoles/{guid}
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name for this role.
