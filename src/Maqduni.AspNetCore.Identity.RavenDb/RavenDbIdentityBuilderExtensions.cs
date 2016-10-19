@@ -15,7 +15,7 @@ namespace Maqduni.Extensions.DependencyInjection
     public static class IdentityRavenDbBuilderExtensions
     {
         /// <summary>
-        /// Adds an RavenDb implementation of identity information stores.
+        /// Adds an RavenDB implementation of identity information stores.
         /// </summary>
         /// <param name="builder">The <see cref="IdentityBuilder"/> instance this method extends.</param>
         /// <returns>The <see cref="IdentityBuilder"/> instance this method extends.</returns>

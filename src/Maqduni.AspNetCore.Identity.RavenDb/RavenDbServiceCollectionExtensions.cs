@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Maqduni.Extensions.DependencyInjection
 {
     /// <summary>
-    ///     Extension methods for setting up RavenDb related services in an <see cref="IServiceCollection" />.
+    ///     Extension methods for setting up RavenDB related services in an <see cref="IServiceCollection" />.
     /// </summary>
     public static class RavenDbServiceCollectionExtensions
     {

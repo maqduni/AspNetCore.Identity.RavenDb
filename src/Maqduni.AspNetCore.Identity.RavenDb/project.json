@@ -3,9 +3,8 @@
   "name": "Maqduni.AspNetCore.Identity.RavenDb",
   "description": "RavenDB user/role store management implementation for ASP.NET Core identity provider.",
   "authors": [ "Iskandar Rafiev" ],
-
   "packOptions": {
-    "releaseNotes": "Updated documentation, removed 'addRavenDbStore' parameter from AddRavenDbAsyncSession() extension method.",
+    "releaseNotes": "Added Intellisense XML file for the packaged dlls. Updated the documentation. Removed 'addRavenDbStore' parameter from AddRavenDbAsyncSession() extension method.",
     "tags": [
       "ravendb",
       "aspnetcore",
@@ -19,7 +18,6 @@
       "url": "https://github.com/maqduni/AspNetCore.Identity.RavenDb"
     }
   },
-
   "dependencies": {
     "Microsoft.AspNetCore.Identity": "1.0.0",
     "Microsoft.Extensions.DependencyInjection": "1.0.0",
@@ -29,10 +27,12 @@
     "RavenDB.Client.UniqueConstraints": "3.5.0-rc-35173",
     "System.Security.Claims": "4.0.1"
   },
-
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50"
     }
+  },
+  "buildOptions": {
+    "xmlDoc": true
   }
 }

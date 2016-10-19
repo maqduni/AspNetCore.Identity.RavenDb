@@ -39,7 +39,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     /// <summary>
     /// Represents a role in the identity system
     /// </summary>
-    /// <typeparam name="TUserRole">The type used for user roles.</typeparam>
     /// <typeparam name="TRoleClaim">The type used for role claims.</typeparam>
     public class IdentityRole<TRoleClaim>
         where TRoleClaim : IdentityRoleClaim

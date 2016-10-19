@@ -55,7 +55,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         #region RavenDb
 
         /// <summary>
-        /// Retrieves the document entity key prefix based on RavenDb store conventions.
+        /// Retrieves the document entity key prefix based on RavenDB store conventions.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
