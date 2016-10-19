@@ -1,10 +1,8 @@
 # RavenDB user/role store management implementation for ASP.NET Core identity provider.
-
 The closest implementation of the user and role stores to the original EntityFramework implementaion. The entire code is well documented.
 
 ## Installation
-
-`Install-Package Maqduni.AspNetCore.Identity.RavenDb`
+`PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb`
 
 ## Important!
 The package requires Unique Constaints bundle to be installed in your RavenDB instance http://ravendb.net/docs/article-page/3.5/Csharp/server/bundles/unique-constraints
