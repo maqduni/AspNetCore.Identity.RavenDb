@@ -15,7 +15,7 @@ The package requires Unique Constaints bundle to be installed in your RavenDB in
 public void ConfigureServices(IServiceCollection services)
 {
     // Add ravendb services.
-    services.AddRavenDbAsyncSession(true, Configuration.GetConnectionString("RavenDb"));
+    services.AddRavenDbAsyncSession(Configuration.GetConnectionString("RavenDb"));
 
     services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddRavenDbStores()
