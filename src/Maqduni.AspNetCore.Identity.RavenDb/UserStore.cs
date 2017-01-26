@@ -44,10 +44,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         /// <returns></returns>
         protected override IdentityUserClaim CreateUserClaim(TUser user, Claim claim)
         {
-            var userClaim = new IdentityUserClaim
-            {
-                Id = $"{user.Id}/IdentityUserClaims/{Guid.NewGuid()}"
-            };
+            var userClaim = new IdentityUserClaim();
             userClaim.InitializeFromClaim(claim);
             return userClaim;
         }
@@ -62,7 +59,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             return new IdentityUserLogin
             {
-                Id = $"{user.Id}/IdentityUserLogins/{Guid.NewGuid()}",
                 ProviderKey = login.ProviderKey,
                 LoginProvider = login.LoginProvider,
                 ProviderDisplayName = login.ProviderDisplayName
@@ -81,7 +77,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             return new IdentityUserToken
             {
-                Id = $"{user.Id}/IdentityUserTokens/{Guid.NewGuid()}",
+                Id = $"{user.Id}/IdentityUserTokens/{loginProvider}/{name}",
                 LoginProvider = loginProvider,
                 Name = name,
                 Value = value
@@ -328,7 +324,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
 
             // TODO: Assumption is made that TUser entity is being tracked in the current session
             // If not, then we'll have to Load<TUser> and overwrite all properties except for Id in the loaded entity
-            user.ConcurrencyStamp = Guid.NewGuid().ToString();
+            //user.ConcurrencyStamp = Guid.NewGuid().ToString();
             try
             {
                 await SaveChanges(cancellationToken);
@@ -465,7 +461,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentException(Resources.ValueCannotBeNullOrEmpty, nameof(normalizedRoleName));
             }
-            var roleEntity = (await AsyncSession.Advanced.LoadStartingWithAsync<TRole>("IdentityRoles/")).FirstOrDefault(r => r.NormalizedName == normalizedRoleName);
+            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"IdentityRoles/{normalizedRoleName}"));
             if (roleEntity == null)
             {
                 throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, Resources.RoleNotFound, normalizedRoleName));
@@ -578,7 +574,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(nameof(user));
             }
 
-            return (await AsyncSession.Advanced.LoadStartingWithAsync<TUserClaim>($"{user.Id}/IdentityUserClaims/")).Select(c => c.ToClaim()).ToList();
+            await Task.FromResult(0);
+
+            return user.Claims.Select(c => c.ToClaim()).ToList();
         }
 
         /// <summary>
@@ -601,7 +599,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             }
             foreach (var claim in claims)
             {
-                AsyncSession.StoreAsync(CreateUserClaim(user, claim), $"{user.Id}/IdentityUserClaims/{Guid.NewGuid()}");
+                user.Claims.Add(CreateUserClaim(user, claim));
             }
             return Task.FromResult(false);
         }
@@ -630,7 +628,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(nameof(newClaim));
             }
 
-            var matchedClaims = (await AsyncSession.Advanced.LoadStartingWithAsync<TUserClaim>($"{user.Id}/IdentityUserClaims/")).Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
+            await Task.FromResult(0);
+
+            var matchedClaims = user.Claims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
             foreach (var matchedClaim in matchedClaims)
             {
                 matchedClaim.ClaimValue = newClaim.Value;
@@ -656,13 +656,15 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(claims));
             }
-            var userClaims = await AsyncSession.Advanced.LoadStartingWithAsync<TUserClaim>($"{user.Id}/IdentityUserClaims/");
+
+            await Task.FromResult(0);
+            
             foreach (var claim in claims)
             {
-                var matchedClaims = userClaims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
+                var matchedClaims = user.Claims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
                 foreach (var c in matchedClaims)
                 {
-                    AsyncSession.Delete(c);
+                    user.Claims.Remove(c);
                 }
             }
         }
@@ -687,7 +689,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(login));
             }
-            AsyncSession.StoreAsync(CreateUserLogin(user, login), $"{user.Id}/IdentityUserLogins/{Guid.NewGuid()}");
+            user.Logins.Add(CreateUserLogin(user, login));
             return Task.FromResult(false);
         }
 
@@ -708,10 +710,13 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            var entry = (await AsyncSession.Advanced.LoadStartingWithAsync<TUserLogin>($"{user.Id}/IdentityUserLogins/")).FirstOrDefault(userLogin => userLogin.LoginProvider == loginProvider && userLogin.ProviderKey == providerKey);
+
+            await Task.FromResult(0);
+
+            var entry = user.Logins.FirstOrDefault(userLogin => userLogin.LoginProvider == loginProvider && userLogin.ProviderKey == providerKey);
             if (entry != null)
             {
-                AsyncSession.Delete(entry);
+                user.Logins.Remove(entry);
             }
         }
 
@@ -731,8 +736,10 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            return (await AsyncSession.Advanced.LoadStartingWithAsync<TUserLogin>($"{user.Id}/IdentityUserLogins/"))
-                .Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.ProviderDisplayName)).ToList();
+
+            await Task.FromResult(0);
+
+            return user.Logins.Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.ProviderDisplayName)).ToList();
         }
 
         /// <summary>
@@ -753,13 +760,8 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             var userIdPrefix = GetDocumentKeyPrefix(Activator.CreateInstance<TUser>());
 
             //TODO: This is a very inefficient function, consider writing an index
-            var userLogins = await AsyncSession.Advanced.LoadStartingWithAsync<TUserLogin>($"{userIdPrefix}/", $"{new string('?', 36)}/IdentityUserLogins/");
-            var userLogin = userLogins.FirstOrDefault(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
-            if (userLogin != null)
-            {
-                return await AsyncSession.LoadAsync<TUser>(userLogin.Id.Substring(0, userIdPrefix.Length + 1 + 36));
-            }
-            return null;
+            var users = await AsyncSession.Advanced.LoadStartingWithAsync<TUser>($"{userIdPrefix}/", pageSize: int.MaxValue);
+            return users.FirstOrDefault(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey));
         }
 
         /// <summary>
@@ -1195,10 +1197,10 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             var userIdPrefix = GetDocumentKeyPrefix(Activator.CreateInstance<TUser>());
 
             //TODO: This is a very inefficient function, consider writing an index
-            var userClaims = (await AsyncSession.Advanced.LoadStartingWithAsync<TUserClaim>($"{userIdPrefix}/", $"{new string('?', 36)}/IdentityUserClaims/"))
-                .Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
+            var users = (await AsyncSession.Advanced.LoadStartingWithAsync<TUser>($"{userIdPrefix}/", pageSize: int.MaxValue))
+                .Where(u => u.Claims.Any(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type));
 
-            return await AsyncSession.LoadAsync<TUser>(userClaims.Select(uc => uc.Id.Substring(0, userIdPrefix.Length + 1 + 36)));
+            return (IList<TUser>)users;
         }
 
         /// <summary>
@@ -1229,7 +1231,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         private Task<TUserToken> FindToken(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
         {
             //TODO: Might also be inefficient, test
-            return Task.FromResult(AsyncSession.Advanced.LoadStartingWithAsync<TUserToken>($"{user.Id}/IdentityUserTokens/").Result.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name));
+            return Task.FromResult(AsyncSession.LoadAsync<TUserToken>($"{user.Id}/IdentityUserTokens/{loginProvider}/{name}")).Result;
         }   
 
         /// <summary>
@@ -1254,7 +1256,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             var token = await FindToken(user, loginProvider, name, cancellationToken);
             if (token == null)
             {
-                await AsyncSession.StoreAsync(CreateUserToken(user, loginProvider, name, value), $"{user.Id}/IdentityUserTokens/{Guid.NewGuid()}");
+                await AsyncSession.StoreAsync(CreateUserToken(user, loginProvider, name, value));
             }
             else
             {

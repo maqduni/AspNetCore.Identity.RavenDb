@@ -79,11 +79,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         public virtual string SecurityStamp { get; set; }
 
         /// <summary>
-        /// A random value that must change whenever a user is persisted to the store
-        /// </summary>
-        public virtual string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
-
-        /// <summary>
         /// Gets or sets a telephone number for the user.
         /// </summary>
         public virtual string PhoneNumber { get; set; }

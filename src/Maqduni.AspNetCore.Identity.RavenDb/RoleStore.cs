@@ -38,7 +38,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         /// <returns>The role claim entity.</returns>
         protected override IdentityRoleClaim CreateRoleClaim(TRole role, Claim claim)
         {
-            return new IdentityRoleClaim { RoleId = role.Id, ClaimType = claim.Type, ClaimValue = claim.Value };
+            return new IdentityRoleClaim { ClaimType = claim.Type, ClaimValue = claim.Value };
         }
     }
 
@@ -153,7 +153,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
 
             // TODO: Assumption is made that TRole entity is being tracked in the current session
             // If not, then we'll have to Load<TRole> and overwrite all properties except for Id in the loaded entity
-            role.ConcurrencyStamp = Guid.NewGuid().ToString();
+            //role.ConcurrencyStamp = Guid.NewGuid().ToString();
             try
             {
                 await SaveChanges(cancellationToken);
@@ -267,7 +267,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            return AsyncSession.LoadByUniqueConstraintAsync<TRole>(u => u.Name, normalizedName);
+            return AsyncSession.LoadAsync<TRole>($"IdentityRoles/{normalizedName}");
         }
 
         /// <summary>
@@ -339,7 +339,10 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            return (await AsyncSession.Advanced.LoadStartingWithAsync<TRoleClaim>($"{role.Id}/IdentityRoleClaims/")).Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
+
+            await Task.FromResult(0);
+
+            return role.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
         }
 
         /// <summary>
@@ -360,8 +363,8 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(claim));
             }
+            role.Claims.Add(CreateRoleClaim(role, claim));
 
-            AsyncSession.StoreAsync(CreateRoleClaim(role, claim), $"{role.Id}/IdentityRoleClaims/{Guid.NewGuid()}");
             return Task.FromResult(false);
         }
 
@@ -383,10 +386,13 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(claim));
             }
-            var claims = (await AsyncSession.Advanced.LoadStartingWithAsync<TRoleClaim>($"{role.Id}/IdentityRoleClaims/")).Where(c => c.ClaimValue == claim.Value);
+
+            await Task.FromResult(0);
+
+            var claims = role.Claims.Where(c => c.ClaimValue == claim.Value);
             foreach (var c in claims)
             {
-                AsyncSession.Delete(c);
+                role.Claims.Remove(c);
             }
         }
 

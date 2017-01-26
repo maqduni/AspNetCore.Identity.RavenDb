@@ -12,7 +12,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
     {
         /// <summary>
         /// Gets or sets the primary key of the token.
-        /// Format: IdentityUsers/{guid}/IdentityUserTokens/{guid}
+        /// Format: IdentityUsers/{guid}/IdentityUserTokens/{loginProvider}/{name}
         /// </summary>
         public virtual string Id { get; set; }
 
