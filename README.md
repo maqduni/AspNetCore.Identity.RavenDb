@@ -34,8 +34,8 @@ services.AddRavenDbDocumentStore(Configuration.GetConnectionString("RavenDb"), s
 services.AddRavenDbAsyncSession();
 ```
 
-## Contributors
-Iskandar Rafiev (author)
+## Contribute
+Anyone willing to contribute to this project is very welcome.
 
 ## License
 MIT License
