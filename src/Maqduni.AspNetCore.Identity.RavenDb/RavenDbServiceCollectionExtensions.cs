@@ -25,7 +25,7 @@ namespace Maqduni.Extensions.DependencyInjection
         ///         {
         ///             var connectionString = "connection string to database";
         /// 
-        ///             services.AddRavenDbStore(connectionString, store => store.Listeners.RegisterListener(new UniqueConstraintsStoreListener()));
+        ///             services.AddRavenDbDocumentStore(connectionString, store => store.Listeners.RegisterListener(new UniqueConstraintsStoreListener()));
         ///         }
         ///     </code>
         /// </example>
@@ -39,7 +39,7 @@ namespace Maqduni.Extensions.DependencyInjection
         /// <returns>
         ///     The same service collection so that multiple calls can be chained.
         /// </returns>
-        public static IServiceCollection AddRavenDbStore(
+        public static IServiceCollection AddRavenDbDocumentStore(
             this IServiceCollection serviceCollection,
             string connectionString,
             Action<IDocumentStore> configureAction = null)
@@ -79,13 +79,13 @@ namespace Maqduni.Extensions.DependencyInjection
         ///         {
         ///             var connectionString = "connection string to database";
         /// 
-        ///             services.AddRavenDbStore(connectionString, store => store.Listeners.RegisterListener(new UniqueConstraintsStoreListener()));
+        ///             services.AddRavenDbDocumentStore(connectionString, store => store.Listeners.RegisterListener(new UniqueConstraintsStoreListener()));
         ///             services.AddRavenDbAsyncSession();
         ///         }
         ///     </code>
         /// </example>
         /// <param name="serviceCollection"> The <see cref="IServiceCollection" /> to add services to. </param>
-        /// <param name="connectionString"> The connection string to the Raven database instance. If present an IDocumentStore service type is registered by internally calling AddRavenDbStore().</param>
+        /// <param name="connectionString"> The connection string to the Raven database instance. If present an IDocumentStore service type is registered by internally calling AddRavenDbDocumentStore().</param>
         /// <returns>
         ///     The same service collection so that multiple calls can be chained.
         /// </returns>
@@ -95,7 +95,7 @@ namespace Maqduni.Extensions.DependencyInjection
         {
             if (!string.IsNullOrEmpty(connectionString))
             {
-                serviceCollection.AddRavenDbStore(connectionString, store => store.Listeners.RegisterListener(new UniqueConstraintsStoreListener()));
+                serviceCollection.AddRavenDbDocumentStore(connectionString, store => store.Listeners.RegisterListener(new UniqueConstraintsStoreListener()));
             }
 
             var serviceProvider = serviceCollection.BuildServiceProvider();

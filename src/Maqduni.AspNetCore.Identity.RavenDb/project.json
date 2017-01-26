@@ -1,15 +1,16 @@
 {
-  "version": "1.3.10-*",
+  "version": "1.3.11-*",
   "name": "Maqduni.AspNetCore.Identity.RavenDb",
   "description": "RavenDB user/role store management implementation for ASP.NET Core identity provider.",
   "authors": [ "Iskandar Rafiev" ],
   "packOptions": {
-    "releaseNotes": "Added Intellisense XML file for the packaged dlls. Updated the documentation. Removed 'addRavenDbStore' parameter from AddRavenDbAsyncSession() extension method.",
+    "releaseNotes": "Renamed 'AddRavenDbStore' to 'AddRavenDbDocumentStore' in the extensions namespace. Made the library compatible with multiple target frameworks.",
     "tags": [
       "ravendb",
       "aspnetcore",
       "identity",
-      "membership"
+      "membership",
+      "authentication"
     ],
     "projectUrl": "https://github.com/maqduni/AspNetCore.Identity.RavenDb",
     "requireLicenseAcceptance": false,
@@ -19,18 +20,23 @@
     }
   },
   "dependencies": {
-    "Microsoft.AspNetCore.Identity": "1.0.0",
-    "Microsoft.Extensions.DependencyInjection": "1.0.0",
-    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
-    "NETStandard.Library": "1.6.0",
-    "RavenDB.Client": "3.5.0-rc-35173",
-    "RavenDB.Client.UniqueConstraints": "3.5.0-rc-35173",
-    "System.Security.Claims": "4.0.1"
+    "Microsoft.AspNetCore.Identity": "1.1.0",
+    "Microsoft.Extensions.DependencyInjection": "1.1.0",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.0",
+    "NETStandard.Library": "1.6.1-*",
+    "NuGet.CommandLine": "3.5.0",
+    "RavenDB.Client": "3.5.2",
+    "RavenDB.Client.UniqueConstraints": "3.5.2",
+    "System.Security.Claims": "4.3.0"
   },
   "frameworks": {
-    "netstandard1.6": {
-      "imports": "dnxcore50"
-    }
+    "net4.6": {},
+    "netstandard1.3": {
+    	"dependencies": {
+        "System.ComponentModel.TypeConverter": "4.3.0-*"
+      }
+    },
+    "netcoreapp1.0":  {}
   },
   "buildOptions": {
     "xmlDoc": true

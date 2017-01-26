@@ -28,7 +28,7 @@ public void ConfigureServices(IServiceCollection services)
 ### With explicit registration of the Raven document store
 ```
 // Add ravendb services.
-services.AddRavenDbStore(Configuration.GetConnectionString("RavenDb"), store => {
+services.AddRavenDbDocumentStore(Configuration.GetConnectionString("RavenDb"), store => {
     store.Listeners.RegisterListener(new UniqueConstraintsStoreListener());
 });
 services.AddRavenDbAsyncSession();

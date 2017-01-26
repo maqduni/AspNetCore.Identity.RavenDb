@@ -8,15 +8,15 @@
     }
   },
   "dependencies": {
-    "NETStandard.Library": "1.6.0",
-    "xunit": "2.2.0-beta2-build3300",
+    "xunit": "2.2.0-beta5-build3474",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
-    "RavenDB.Client": "3.5.0-rc-35173",
-    "RavenDB.Client.UniqueConstraints": "3.5.0-rc-35173",
     "Maqduni.AspNetCore.Identity.RavenDb": {
-      "version": "1.3.8-*",
+      "version": "1.3.11-*",
       "target": "project"
-    }
+    },
+    "NETStandard.Library": "1.6.1",
+    "RavenDB.Client": "3.5.2",
+    "RavenDB.Client.UniqueConstraints": "3.5.2"
   },
   "frameworks": {
     "netcoreapp1.0": {
