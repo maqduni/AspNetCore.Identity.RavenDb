@@ -29,10 +29,12 @@ public void ConfigureServices(IServiceCollection services)
 ```
 // Add ravendb services.
 services.AddRavenDbDocumentStore(Configuration.GetConnectionString("RavenDb"), store => {
-    store.Listeners.RegisterListener(new UniqueConstraintsStoreListener());
+    // Store configuration happens here
 });
 services.AddRavenDbAsyncSession();
 ```
+
+NOTE: UniqueConstraintsStoreListener gets registered internally for both ways of Raven document store registration.
 
 ## Contribute
 Anyone willing to contribute to this project is very welcome.

@@ -53,7 +53,9 @@ namespace Maqduni.Extensions.DependencyInjection
             configureAction?.Invoke(documentStore);
 
             // IdentityUser UserName and Email fields are set up with unique constraints, the store listener is required
-            documentStore.Listeners.RegisterListener(new UniqueConstraintsStoreListener());
+            if (documentStore.Listeners.StoreListeners.All(l => l.GetType() != typeof(UniqueConstraintsStoreListener)))
+                documentStore.Listeners.RegisterListener(new UniqueConstraintsStoreListener());
+
             documentStore.ParseConnectionString(connectionString);
             documentStore.Initialize();
 
@@ -95,11 +97,9 @@ namespace Maqduni.Extensions.DependencyInjection
             this IServiceCollection serviceCollection,
             string connectionString = null)
         {
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-
             if (!string.IsNullOrEmpty(connectionString))
             {
-                if (serviceProvider.GetService<IDocumentStore>() != null)
+                if (serviceCollection.BuildServiceProvider().GetService<IDocumentStore>() != null)
                 {
                     throw new TypeLoadException("Service type IDocumentStore is already registered. Either omit connectionString parameter or remove existing instance of the IDocumentStore service.");
                 }
@@ -107,6 +107,7 @@ namespace Maqduni.Extensions.DependencyInjection
                 serviceCollection.AddRavenDbDocumentStore(connectionString, store => store.Listeners.RegisterListener(new UniqueConstraintsStoreListener()));
             }
 
+            var serviceProvider = serviceCollection.BuildServiceProvider();
             var documentStore = serviceProvider.GetService<IDocumentStore>();
             if (documentStore == null)
             {
