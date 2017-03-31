@@ -128,6 +128,19 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             return tag;
         }
 
+        /// <summary>
+        /// Retrieves the document entity key prefix based on RavenDB store conventions.
+        /// </summary>
+        /// <returns></returns>
+        private string GetDocumentKeyPrefix<T>()
+        {
+            var typeTagName = AsyncSession.Advanced.DocumentStore.Conventions.GetTypeTagName(typeof(T));
+            if (string.IsNullOrEmpty(typeTagName)) //ignore empty tags
+                return null;
+            var tag = AsyncSession.Advanced.DocumentStore.Conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
+            return tag;
+        }
+
         #endregion
 
         /// <summary>
@@ -461,7 +474,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentException(Resources.ValueCannotBeNullOrEmpty, nameof(normalizedRoleName));
             }
-            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"IdentityRoles/{normalizedRoleName}"));
+            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"{GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}"));
             if (roleEntity == null)
             {
                 throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, Resources.RoleNotFound, normalizedRoleName));
@@ -490,7 +503,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentException(Resources.ValueCannotBeNullOrEmpty, nameof(normalizedRoleName));
             }
 
-            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"IdentityRoles/{normalizedRoleName}"));
+            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"{GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}"));
             if (roleEntity != null)
             {
                 //TODO: Figure out when SaveChanges is called
@@ -537,7 +550,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(Resources.ValueCannotBeNullOrEmpty, nameof(normalizedRoleName));
             }
-            return user.Roles.Any(r => string.Equals(r, $"IdentityRoles/{normalizedRoleName}", StringComparison.OrdinalIgnoreCase));
+
+            var roleId = $"{GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}";
+            return await Task.FromResult(user.Roles.Any(r => string.Equals(r, roleId, StringComparison.OrdinalIgnoreCase)));
         }
 
         /// <summary>
