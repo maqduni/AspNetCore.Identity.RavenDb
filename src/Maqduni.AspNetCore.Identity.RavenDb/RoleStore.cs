@@ -284,7 +284,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            return Task.FromResult(role.NormalizedName);
+            return Task.FromResult(role.Name.ToLower());
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            role.NormalizedName = normalizedName;
+            //role.Name = normalizedName;
             return Task.FromResult(0);
         }
 
@@ -322,7 +322,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         /// </summary>
         public void Dispose()
         {
-            AsyncSession.SaveChangesAsync();
             _disposed = true;
         }
 

@@ -266,7 +266,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            return Task.FromResult(user.NormalizedUserName);
+            return Task.FromResult(user.UserName.ToLower());
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            user.NormalizedUserName = normalizedName;
+            //user.NormalizedUserName = normalizedName;
             return Task.FromResult(0);
         }
 
@@ -490,7 +490,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentException(Resources.ValueCannotBeNullOrEmpty, nameof(normalizedRoleName));
             }
 
-            var roleEntity = (await AsyncSession.LoadAsync<TRole>(user.Roles)).FirstOrDefault(r => r.NormalizedName == normalizedRoleName);
+            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"IdentityRoles/{normalizedRoleName}"));
             if (roleEntity != null)
             {
                 //TODO: Figure out when SaveChanges is called
@@ -537,7 +537,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(Resources.ValueCannotBeNullOrEmpty, nameof(normalizedRoleName));
             }
-            return (await AsyncSession.LoadAsync<TRole>(user.Roles)).Any(r => r.NormalizedName == normalizedRoleName);
+            return user.Roles.Any(r => string.Equals(r, $"IdentityRoles/{normalizedRoleName}", StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -556,7 +556,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         /// </summary>
         public void Dispose()
         {
-            AsyncSession.SaveChangesAsync();
             _disposed = true;
         }
 
@@ -856,7 +855,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            return Task.FromResult(user.NormalizedEmail);
+            return Task.FromResult(user.Email.ToLower());
         }
 
         /// <summary>
@@ -874,7 +873,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            user.NormalizedEmail = normalizedEmail;
+            //user.Email = normalizedEmail;
             return Task.FromResult(0);
         }
 

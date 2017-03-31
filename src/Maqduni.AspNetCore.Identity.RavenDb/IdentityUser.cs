@@ -45,23 +45,13 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         /// </summary>
         [UniqueConstraint(CaseInsensitive = true)]
         public virtual string UserName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the normalized user name for this user.
-        /// </summary>
-        public virtual string NormalizedUserName { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the email address for this user.
         /// </summary>
         [UniqueConstraint(CaseInsensitive = true)]
         public virtual string Email { get; set; }
-
-        /// <summary>
-        /// Gets or sets the normalized email address for this user.
-        /// </summary>
-        public virtual string NormalizedEmail { get; set; }
-
+        
         /// <summary>
         /// Gets or sets a flag indicating if a user has confirmed their email address.
         /// </summary>
