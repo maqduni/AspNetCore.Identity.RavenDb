@@ -1,10 +1,10 @@
 {
-  "version": "1.3.26-*",
+  "version": "1.3.28-*",
   "name": "Maqduni.AspNetCore.Identity.RavenDb",
   "description": "RavenDB user/role store management implementation for ASP.NET Core identity provider.",
   "authors": [ "Iskandar Rafiev" ],
   "packOptions": {
-    "releaseNotes": "Removed unnecessary registration of the UniqueConstraintsStoreListener from Configuration block of Startup.cs. Upgraded RevenDB.Client package to v3.5.3.",
+    "releaseNotes": "Fixed identity role id. Removed NormalizedName, NormalizedEmail from role and user entities. Added unit tests.",
     "tags": [
       "ravendb",
       "aspnetcore",
