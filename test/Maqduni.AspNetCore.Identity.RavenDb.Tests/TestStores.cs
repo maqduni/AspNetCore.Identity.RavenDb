@@ -38,7 +38,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
 
         [Theory(DisplayName = "User AddToRoleAsync")]
         [InlineData("test@test.com", "User")]
-        public void UserAddToRoleAsync(string email, string role)
+        public void UserAddToRoleAsync(string email, string roleName)
         {
             using (var asyncSession = RavenDbStore.Current.OpenAsyncSession())
             {
@@ -47,23 +47,45 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
                 var user = userStore.FindByEmailAsync(email).Result;
                 Assert.NotNull(user);
 
-                userStore.AddToRoleAsync(user, role).Wait();
-                Assert.True(user.Roles.Contains($"IdentityRoles/{role}", StringComparer.OrdinalIgnoreCase));
+                userStore.AddToRoleAsync(user, roleName).Wait();
+                Assert.True(user.Roles.Contains($"IdentityRoles/{roleName}", StringComparer.OrdinalIgnoreCase));
 
-                userStore.UpdateAsync(user).Wait();
+                var result = userStore.UpdateAsync(user).Result;
+                Assert.True(result.Succeeded);
             }
         }
 
         [Theory(DisplayName = "Role CreateAsync")]
         [InlineData("User")]
         [InlineData("Admin")]
-        public void RoleCreateAsync(string role)
+        public void RoleCreateAsync(string roleName)
         {
             using (var asyncSession = RavenDbStore.Current.OpenAsyncSession())
             {
                 var roleStore = new RoleStore<IdentityRole>(asyncSession);
 
-                roleStore.CreateAsync(new IdentityRole(role)).Wait();
+                var role = roleStore.FindByNameAsync(roleName);
+                Assert.Null(role);
+
+                var result = roleStore.CreateAsync(new IdentityRole(roleName)).Result;
+                Assert.True(result.Succeeded);
+            }
+        }
+
+        [Theory(DisplayName = "User IsInRoleAsync")]
+        [InlineData("test@test.com", "User")]
+        [InlineData("test@test.com", "Admin")]
+        public void UserIsInRoleAsync(string email, string roleName)
+        {
+            using (var asyncSession = RavenDbStore.Current.OpenAsyncSession())
+            {
+                var userStore = new UserStore<IdentityUser, IdentityRole>(asyncSession);
+
+                var user = userStore.FindByEmailAsync(email).Result;
+                Assert.NotNull(user);
+
+                var isInRole = userStore.IsInRoleAsync(user, roleName).Result;
+                Assert.True(isInRole);
             }
         }
     }
