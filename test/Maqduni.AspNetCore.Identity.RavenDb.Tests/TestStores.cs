@@ -7,6 +7,11 @@ using Xunit;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
 {
+    class ApplicationUser: IdentityUser
+    {
+
+    }
+
     public class TestStores
     {
         public TestStores()
@@ -86,6 +91,25 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
 
                 var isInRole = userStore.IsInRoleAsync(user, roleName).Result;
                 Assert.True(isInRole);
+            }
+        }
+
+        [Theory(DisplayName = "User SetPasswordHashAsync")]
+        [InlineData("test@test.com", "sOmEhAsHbAsE64")]
+        public void UserSetPasswordHashAsync(string email, string passwordHash)
+        {
+            using (var asyncSession = RavenDbStore.Current.OpenAsyncSession())
+            {
+                var userStore = new UserStore<ApplicationUser, IdentityRole>(asyncSession);
+
+                var user = userStore.FindByEmailAsync(email).Result;
+                Assert.NotNull(user);
+
+                userStore.SetPasswordHashAsync(user, passwordHash).Wait();
+                Assert.True(user.PasswordHash == passwordHash);
+
+                var result = userStore.UpdateAsync(user).Result;
+                Assert.True(result.Succeeded);
             }
         }
     }
