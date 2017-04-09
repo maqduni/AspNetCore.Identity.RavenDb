@@ -13,6 +13,7 @@ using Microsoft.Extensions.Internal;
 using Raven.Client;
 using Raven.Abstractions.Exceptions;
 using Raven.Client.UniqueConstraints;
+using AspNetCore.Identity.RavenDb;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb
 {
@@ -52,37 +53,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         where TRole : IdentityRole<TRoleClaim>
         where TRoleClaim : IdentityRoleClaim
     {
-        #region RavenDb
-
-        /// <summary>
-        /// Retrieves the document entity key prefix based on RavenDB store conventions.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        private string GetDocumentKeyPrefix(object entity)
-        {
-            var typeTagName = AsyncSession.Advanced.DocumentStore.Conventions.GetDynamicTagName(entity);
-            if (string.IsNullOrEmpty(typeTagName)) //ignore empty tags
-                return null;
-            var tag = AsyncSession.Advanced.DocumentStore.Conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
-            return tag;
-        }
-
-        /// <summary>
-        /// Retrieves the document entity key prefix based on RavenDB store conventions.
-        /// </summary>
-        /// <returns></returns>
-        private string GetDocumentKeyPrefix<T>()
-        {
-            var typeTagName = AsyncSession.Advanced.DocumentStore.Conventions.GetTypeTagName(typeof(T));
-            if (string.IsNullOrEmpty(typeTagName)) //ignore empty tags
-                return null;
-            var tag = AsyncSession.Advanced.DocumentStore.Conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
-            return tag;
-        }
-
-        #endregion
-
         /// <summary>
         /// Constructs a new instance of <see cref="RoleStore{TRole, TRoleClaim}"/>.
         /// </summary>
@@ -148,7 +118,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(role.Name));
             }
-            await AsyncSession.StoreAsync(role, $"{GetDocumentKeyPrefix(role)}/{role.Name}");
+            await AsyncSession.StoreAsync(role, $"{AsyncSession.GetDocumentKeyPrefix(role)}/{role.Name}");
             await SaveChanges(cancellationToken);
             return IdentityResult.Success;
         }
@@ -284,7 +254,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            return AsyncSession.LoadAsync<TRole>($"{GetDocumentKeyPrefix<TRole>()}/{normalizedName}");
+            return AsyncSession.LoadAsync<TRole>($"{AsyncSession.GetDocumentKeyPrefix<TRole>()}/{normalizedName}");
         }
 
         /// <summary>

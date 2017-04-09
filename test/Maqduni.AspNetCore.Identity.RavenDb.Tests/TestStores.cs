@@ -3,6 +3,7 @@ using Raven.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -70,8 +71,8 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.NotNull(role);
 
             _userStore.AddToRoleAsync(user, roleName).Wait();
-            Assert.True(user.Roles.Contains(role.Id, StringComparer.OrdinalIgnoreCase));
-            Assert.True(role.Users.Contains(user.Id, StringComparer.OrdinalIgnoreCase));
+            Assert.Contains(role.Id, user.Roles, StringComparer.OrdinalIgnoreCase);
+            Assert.Contains(user.Id, role.Users, StringComparer.OrdinalIgnoreCase);
 
             var result = _userStore.UpdateAsync(user).Result;
             Assert.True(result.Succeeded);
@@ -89,9 +90,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.NotNull(role);
 
             _userStore.RemoveFromRoleAsync(user, roleName).Wait();
-            Assert.False(user.Roles.Contains(role.Id, StringComparer.OrdinalIgnoreCase));
-            Assert.False(role.Users.Contains(user.Id, StringComparer.OrdinalIgnoreCase));
-
+            Assert.DoesNotContain(role.Id, user.Roles, StringComparer.OrdinalIgnoreCase);
+            Assert.DoesNotContain(user.Id, role.Users, StringComparer.OrdinalIgnoreCase);
+            
             var result = _userStore.UpdateAsync(user).Result;
             Assert.True(result.Succeeded);
         }
@@ -133,5 +134,54 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             var result = _userStore.UpdateAsync(user).Result;
             Assert.True(result.Succeeded);
         }
+
+        [Theory(DisplayName = "User AddClaimsAsync")]
+        [InlineData("test@test.com", "GraduatedSchoolYear", "2006")]
+        [InlineData("test@test.com", "GraduatedUniversityYear", "2010")]
+        public void UserAddClaimsAsync(string email, string claimType, string claimValue)
+        {
+            var user = _userStore.FindByEmailAsync(email).Result;
+            Assert.NotNull(user);
+
+            var claim = new Claim(claimType, claimValue);
+            _userStore.AddClaimsAsync(user, new List<Claim>() { claim }).Wait();
+
+            var claims = _userStore.GetClaimsAsync(user).Result;
+            Assert.True(claims.Any(c => c.Type.Equals(claim.Type, StringComparison.OrdinalIgnoreCase) && c.Value.Equals(claim.Value, StringComparison.OrdinalIgnoreCase)));
+
+            var result = _userStore.UpdateAsync(user).Result;
+            Assert.True(result.Succeeded);
+        }
+
+        [Theory(DisplayName = "User RemoveClaimsAsync")]
+        [InlineData("test@test.com", "GraduatedSchoolYear", "2006")]
+        [InlineData("test@test.com", "GraduatedUniversityYear", "2010")]
+        public void UserRemoveClaimsAsync(string email, string claimType, string claimValue)
+        {
+            var user = _userStore.FindByEmailAsync(email).Result;
+            Assert.NotNull(user);
+
+            var claim = new Claim(claimType, claimValue);
+            _userStore.RemoveClaimsAsync(user, new List<Claim>() { claim }).Wait();
+
+            var claims = _userStore.GetClaimsAsync(user).Result;
+            Assert.False(claims.Any(c => c.Type.Equals(claim.Type, StringComparison.OrdinalIgnoreCase)));
+
+            var result = _userStore.UpdateAsync(user).Result;
+            Assert.True(result.Succeeded);
+        }
+
+        [Theory(DisplayName = "User GetUsersForClaimAsync")]
+        [InlineData("GraduatedSchoolYear", "2006")]
+        [InlineData("GraduatedUniversityYear", "2010")]
+        public void UserGetUsersForClaimAsync(string claimType, string claimValue)
+        {
+            var claim = new Claim(claimType, claimValue);
+
+            var user = _userStore.GetUsersForClaimAsync(claim).Result;
+            Assert.NotEmpty(user);
+        }
+
+
     }
 }

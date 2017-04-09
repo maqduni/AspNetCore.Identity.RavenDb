@@ -17,7 +17,7 @@ public void ConfigureServices(IServiceCollection services)
     // Add ravendb services.
     services.AddRavenDbAsyncSession(Configuration.GetConnectionString("RavenDb"));
 
-    services.AddIdentity<ApplicationUser, IdentityRole>()
+    services.AddIdentity<ApplicationUser, ApplicationRole>()
         .AddRavenDbStores()
         .AddDefaultTokenProviders();
 
@@ -34,15 +34,17 @@ services.AddRavenDbDocumentStore(Configuration.GetConnectionString("RavenDb"), s
 services.AddRavenDbAsyncSession();
 ```
 
-NOTE: UniqueConstraintsStoreListener gets registered internally for both ways of Raven document store registration.
+NOTE: 
+* UniqueConstraintsStoreListener gets registered internally for both ways of Raven document store registration.
+* $"{userCollectionName}/ClaimsAndLogins" index gets created on application startup. It is used for searching users by `Claim` or `Login`.
 
 ## Contribute
-Anyone willing to contribute to this project is very welcome.
+Anyone is very welcome to contribute to this project by either providing their valuable feedback or by forking and adding new features or fixing bugs.
 
 ## License
 MIT License
 
-Copyright (c) 2016 Iskandar Rafiev
+Copyright (c) 2017 Iskandar Rafiev
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

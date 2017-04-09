@@ -1,10 +1,10 @@
 {
-  "version": "1.3.29-*",
+  "version": "1.3.32-*",
   "name": "Maqduni.AspNetCore.Identity.RavenDb",
   "description": "RavenDB user/role store management implementation for ASP.NET Core identity provider.",
   "authors": [ "Iskandar Rafiev" ],
   "packOptions": {
-    "releaseNotes": "IdentityRole can now be used as an abstraction and be inherited from. Added unit tests.",
+    "releaseNotes": "Added $\"{userCollectionName}/ClaimsAndLogins\") index for being able to seach users by Claim and Login. Fixed bugs. Added unit tests.",
     "tags": [
       "ravendb",
       "aspnetcore",

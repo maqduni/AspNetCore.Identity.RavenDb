@@ -17,6 +17,7 @@ using Raven.Client.Document.Async;
 using Raven.Abstractions.Exceptions;
 using Raven.Client.UniqueConstraints;
 using Microsoft.AspNetCore.Identity;
+using AspNetCore.Identity.RavenDb;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb
 {
@@ -112,37 +113,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         where TUserToken : IdentityUserToken
         where TRoleClaim : IdentityRoleClaim
     {
-        #region RavenDb
-
-        /// <summary>
-        /// Retrieves the document entity key prefix based on RavenDB store conventions.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        private string GetDocumentKeyPrefix(object entity)
-        {
-            var typeTagName = AsyncSession.Advanced.DocumentStore.Conventions.GetDynamicTagName(entity);
-            if (string.IsNullOrEmpty(typeTagName)) //ignore empty tags
-                return null;
-            var tag = AsyncSession.Advanced.DocumentStore.Conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
-            return tag;
-        }
-
-        /// <summary>
-        /// Retrieves the document entity key prefix based on RavenDB store conventions.
-        /// </summary>
-        /// <returns></returns>
-        private string GetDocumentKeyPrefix<T>()
-        {
-            var typeTagName = AsyncSession.Advanced.DocumentStore.Conventions.GetTypeTagName(typeof(T));
-            if (string.IsNullOrEmpty(typeTagName)) //ignore empty tags
-                return null;
-            var tag = AsyncSession.Advanced.DocumentStore.Conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
-            return tag;
-        }
-
-        #endregion
-
         /// <summary>
         /// Creates a new instance of <see cref="UserStore{TUser, TRole, TUserClaim, TUserLogin, TUserToken, TRoleClaim}"/>.
         /// </summary>
@@ -315,7 +285,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            await AsyncSession.StoreAsync(user, $"{GetDocumentKeyPrefix(user)}/{Guid.NewGuid()}");
+            await AsyncSession.StoreAsync(user, $"{AsyncSession.GetDocumentKeyPrefix(user)}/{Guid.NewGuid()}");
             await SaveChanges(cancellationToken);
             return IdentityResult.Success;
         }
@@ -474,7 +444,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentException(Resources.ValueCannotBeNullOrEmpty, nameof(normalizedRoleName));
             }
-            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"{GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}"));
+            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"{AsyncSession.GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}"));
             if (roleEntity == null)
             {
                 throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, Resources.RoleNotFound, normalizedRoleName));
@@ -503,7 +473,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentException(Resources.ValueCannotBeNullOrEmpty, nameof(normalizedRoleName));
             }
 
-            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"{GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}"));
+            var roleEntity = (await AsyncSession.LoadAsync<TRole>($"{AsyncSession.GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}"));
             if (roleEntity != null)
             {
                 //TODO: Figure out when SaveChanges is called
@@ -551,7 +521,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(Resources.ValueCannotBeNullOrEmpty, nameof(normalizedRoleName));
             }
 
-            var roleId = $"{GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}";
+            var roleId = $"{AsyncSession.GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}";
             return await Task.FromResult(user.Roles.Any(r => string.Equals(r, roleId, StringComparison.OrdinalIgnoreCase)));
         }
 
@@ -670,17 +640,18 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(claims));
             }
-
-            await Task.FromResult(0);
             
+            //TODO: Optimize below block
             foreach (var claim in claims)
             {
-                var matchedClaims = user.Claims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type);
+                var matchedClaims = user.Claims.Where(uc => uc.ClaimValue == claim.Value && uc.ClaimType == claim.Type).ToList();
                 foreach (var c in matchedClaims)
                 {
                     user.Claims.Remove(c);
                 }
             }
+
+            await Task.FromResult(0);
         }
 
         /// <summary>
@@ -771,11 +742,18 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            var userIdPrefix = GetDocumentKeyPrefix(Activator.CreateInstance<TUser>());
+            var userIdPrefix = AsyncSession.GetDocumentKeyPrefix<TUser>();
 
-            //TODO: This is a very inefficient function, consider writing an index
-            var users = await AsyncSession.Advanced.LoadStartingWithAsync<TUser>($"{userIdPrefix}/", pageSize: int.MaxValue);
-            return users.FirstOrDefault(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey));
+            ////TODO: This is a very inefficient function, consider writing an index
+            //var users = await AsyncSession.Advanced.LoadStartingWithAsync<TUser>($"{userIdPrefix}/", pageSize: int.MaxValue);
+            //return users.FirstOrDefault(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey));
+
+            var query = AsyncSession.Advanced
+                .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins", false)
+                .WhereEquals("LoginProvider", loginProvider)
+                .AndAlso().WhereEquals("ProviderKey", providerKey);
+
+            return await query.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -1208,13 +1186,20 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(nameof(claim));
             }
 
-            var userIdPrefix = GetDocumentKeyPrefix(Activator.CreateInstance<TUser>());
+            var userIdPrefix = AsyncSession.GetDocumentKeyPrefix<TUser>();
 
-            //TODO: This is a very inefficient function, consider writing an index
-            var users = (await AsyncSession.Advanced.LoadStartingWithAsync<TUser>($"{userIdPrefix}/", pageSize: int.MaxValue))
-                .Where(u => u.Claims.Any(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type));
+            ////TODO: This is a very inefficient function, consider writing an index
+            //var users = (await AsyncSession.Advanced.LoadStartingWithAsync<TUser>($"{userIdPrefix}/", pageSize: int.MaxValue))
+            //    .Where(u => u.Claims.Any(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type));
 
-            return (IList<TUser>)users;
+            // TODO: Add support for large number of users
+            var query = AsyncSession.Advanced
+                .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins", false)
+                .WhereEquals("ClaimValue", claim.Value)
+                .AndAlso().WhereEquals("ClaimType", claim.Type)
+                .Take(1024);
+
+            return await query.ToListAsync();
         }
 
         /// <summary>
