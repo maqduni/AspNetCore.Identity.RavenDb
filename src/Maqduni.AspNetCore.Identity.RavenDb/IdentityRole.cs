@@ -22,7 +22,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         public IdentityRole(string roleName)
         {
             Name = roleName;
-            Id = $"IdentityRoles/{roleName}";
         }
     }
 
@@ -45,7 +44,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         public IdentityRole(string roleName)
         {
             Name = roleName;
-            Id = $"IdentityRoles/{roleName}";
         }
 
         /// <summary>

@@ -68,6 +68,19 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             return tag;
         }
 
+        /// <summary>
+        /// Retrieves the document entity key prefix based on RavenDB store conventions.
+        /// </summary>
+        /// <returns></returns>
+        private string GetDocumentKeyPrefix<T>()
+        {
+            var typeTagName = AsyncSession.Advanced.DocumentStore.Conventions.GetTypeTagName(typeof(T));
+            if (string.IsNullOrEmpty(typeTagName)) //ignore empty tags
+                return null;
+            var tag = AsyncSession.Advanced.DocumentStore.Conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
+            return tag;
+        }
+
         #endregion
 
         /// <summary>
@@ -131,7 +144,11 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             {
                 throw new ArgumentNullException(nameof(role));
             }
-            await AsyncSession.StoreAsync(role); //TODO: Possibly add the id as the second parameter to StoreAsync
+            if (string.IsNullOrWhiteSpace(role.Name))
+            {
+                throw new ArgumentNullException(nameof(role.Name));
+            }
+            await AsyncSession.StoreAsync(role, $"{GetDocumentKeyPrefix(role)}/{role.Name}");
             await SaveChanges(cancellationToken);
             return IdentityResult.Success;
         }
@@ -267,7 +284,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            return AsyncSession.LoadAsync<TRole>($"IdentityRoles/{normalizedName}");
+            return AsyncSession.LoadAsync<TRole>($"{GetDocumentKeyPrefix<TRole>()}/{normalizedName}");
         }
 
         /// <summary>
