@@ -1,4 +1,5 @@
 ﻿using Maqduni.AspNetCore.Identity.RavenDb;
+using Microsoft.AspNetCore.Identity;
 using Raven.Client;
 using System;
 using System.Collections.Generic;
@@ -182,6 +183,45 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.NotEmpty(user);
         }
 
+        [Theory(DisplayName = "User AddLoginAsync")]
+        [InlineData("test@test.com", "FaceBook", "56759f85-0ad3-4fd3-86e3-a9d133fc5816", "Test User")]
+        public void UserAddLoginAsync(string email, string loginProvider, string providerKey, string displayName)
+        {
+            var user = _userStore.FindByEmailAsync(email).Result;
+            Assert.NotNull(user);
 
+            var login = new UserLoginInfo(loginProvider, providerKey, displayName);
+            _userStore.AddLoginAsync(user, login).Wait();
+
+            var logins = _userStore.GetLoginsAsync(user).Result;
+            Assert.True(logins.Any(l => l.LoginProvider.Equals(login.LoginProvider, StringComparison.OrdinalIgnoreCase) && l.ProviderKey.Equals(login.ProviderKey, StringComparison.OrdinalIgnoreCase)));
+
+            var result = _userStore.UpdateAsync(user).Result;
+            Assert.True(result.Succeeded);
+        }
+
+        [Theory(DisplayName = "User RemoveLoginAsync")]
+        [InlineData("test@test.com", "FaceBook", "56759f85-0ad3-4fd3-86e3-a9d133fc5816")]
+        public void UserRemoveLoginAsync(string email, string loginProvider, string providerKey)
+        {
+            var user = _userStore.FindByEmailAsync(email).Result;
+            Assert.NotNull(user);
+            
+            _userStore.RemoveLoginAsync(user, loginProvider, providerKey).Wait();
+
+            var logins = _userStore.GetLoginsAsync(user).Result;
+            Assert.False(logins.Any(l => l.LoginProvider.Equals(loginProvider, StringComparison.OrdinalIgnoreCase) && l.ProviderKey.Equals(providerKey, StringComparison.OrdinalIgnoreCase)));
+
+            var result = _userStore.UpdateAsync(user).Result;
+            Assert.True(result.Succeeded);
+        }
+
+        [Theory(DisplayName = "User FindByLoginAsync")]
+        [InlineData("test@test.com", "FaceBook", "56759f85-0ad3-4fd3-86e3-a9d133fc5816")]
+        public void UserFindByLoginAsync(string email, string loginProvider, string providerKey)
+        {
+            var user = _userStore.FindByLoginAsync(loginProvider, providerKey).Result;
+            Assert.NotNull(user);
+        }
     }
 }

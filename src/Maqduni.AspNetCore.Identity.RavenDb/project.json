@@ -4,7 +4,7 @@
   "description": "RavenDB user/role store management implementation for ASP.NET Core identity provider.",
   "authors": [ "Iskandar Rafiev" ],
   "packOptions": {
-    "releaseNotes": "Added $\"{userCollectionName}/ClaimsAndLogins\") index for being able to seach users by Claim and Login. Fixed bugs. Added unit tests.",
+    "releaseNotes": "Added $\"{userCollectionName}/ClaimsAndLogins\" index for being able to search users by Claim and Login. Fixed bugs. Added unit tests.",
     "tags": [
       "ravendb",
       "aspnetcore",
