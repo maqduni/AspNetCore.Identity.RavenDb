@@ -3,6 +3,7 @@ The closest implementation of the user and role stores to the original EntityFra
 
 ## Installation
 `PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb`
+
 `PM> Install-Package Maqduni.RavenDb.Extensions`
 
 ## Important!
