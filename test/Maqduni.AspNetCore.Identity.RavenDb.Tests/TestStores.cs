@@ -30,7 +30,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
 
         public TestStores()
         {
-            _asyncSession = RavenDbStore.Current.OpenAsyncSession();
+            _asyncSession = Store.Documents.OpenAsyncSession();
             _roleStore = new RoleStore<ApplicationRole>(_asyncSession);
             _userStore = new UserStore<ApplicationUser, ApplicationRole>(_asyncSession);
         }
@@ -40,6 +40,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             _userStore.Dispose();
             _roleStore.Dispose();
             _asyncSession.Dispose();
+            Store.Dispose();
         }
 
 

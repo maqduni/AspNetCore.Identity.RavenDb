@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Identity.RavenDb
+namespace Maqduni.RavenDb.Extensions
 {
     /// <summary>
-    /// 
+    /// RavenDB document store and document session extensions.
     /// </summary>
     public static class RavenDbDocumentStoreExtensions
     {
@@ -81,6 +82,43 @@ namespace AspNetCore.Identity.RavenDb
         public static string GetDocumentKeyPrefix(this IAsyncDocumentSession session, Type entityType)
         {
             return GetDocumentKeyPrefix(session.Advanced.DocumentStore, entityType);
+        }
+
+        /// <summary>
+        /// Appends the collection name and returns the full path to the document.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="store">The RavenDB document store.</param>
+        /// <param name="partialId">Partial path of the document (the part that usually follows the collection name).</param>
+        /// <returns></returns>
+        public static string GetFullDocumentKey<T>(this IDocumentStore store, object partialId)
+        {
+            return store.Conventions.FindFullDocumentKeyFromNonStringIdentifier(partialId, typeof(T), false);
+        }
+
+        /// <summary>
+        /// Omits the collection name and returns the partial part of the document path.
+        /// </summary>
+        /// <param name="store">The RavenDB document store.</param>
+        /// <param name="fullId">Full path of the document.</param>
+        /// <returns></returns>
+        public static string GetPartialDocumentKey(this IDocumentStore store, string fullId)
+        {
+            return store.Conventions.FindIdValuePartForValueTypeConversion(null, fullId);
+        }
+
+        /// <summary>
+        /// Returns the first available result of T from a lazy query, otherwise null.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self">The RavenDB query.</param>
+        /// <param name="predicate">Expression of the query used to return the result.</param>
+        /// <returns></returns>
+        public static Lazy<T> LazyFirstOfDefault<T>(this IQueryable<T> self, Expression<Func<T, bool>> predicate = null)
+        {
+            Lazy<IEnumerable<T>> lazy = predicate == null ? self.Take(1).Lazily() : self.Where(predicate).Take(1).Lazily();
+
+            return new Lazy<T>(() => lazy.Value.FirstOrDefault());
         }
     }
 }

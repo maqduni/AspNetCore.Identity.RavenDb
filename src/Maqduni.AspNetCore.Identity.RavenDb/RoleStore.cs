@@ -13,7 +13,7 @@ using Microsoft.Extensions.Internal;
 using Raven.Client;
 using Raven.Abstractions.Exceptions;
 using Raven.Client.UniqueConstraints;
-using AspNetCore.Identity.RavenDb;
+using Maqduni.RavenDb.Extensions;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb
 {

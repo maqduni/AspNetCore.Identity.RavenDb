@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Maqduni.AspNetCore.Identity.RavenDb;
+using Maqduni.RavenDb.Extensions;
 using Raven.Client;
 using Raven.Abstractions.Indexing;
-using AspNetCore.Identity.RavenDb;
 using System.Collections.Generic;
 
 namespace Maqduni.Extensions.DependencyInjection

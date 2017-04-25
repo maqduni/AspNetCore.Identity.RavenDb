@@ -12,12 +12,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Internal;
 using Raven.Client;
 using Raven.Client.Document;
-using Maqduni.AspNetCore.Identity.RavenDb;
+using Maqduni.RavenDb.Extensions;
 using Raven.Client.Document.Async;
 using Raven.Abstractions.Exceptions;
 using Raven.Client.UniqueConstraints;
 using Microsoft.AspNetCore.Identity;
-using AspNetCore.Identity.RavenDb;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb
 {
