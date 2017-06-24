@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Very useful RavenDB and RavenFS extensions.</Description>
+    <Authors>Iskandar Rafiev</Authors>
+    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Maqduni.RavenDb.Extensions</AssemblyName>
+    <PackageId>Maqduni.RavenDb.Extensions</PackageId>
+    <PackageTags>ravendb;aspnetcore;ravenfs;filesystem;nosql;extensions</PackageTags>
+    <PackageReleaseNotes>Added extensions for files store (including sharded files store), useful extensions for database key conversions, and LazyFirstOrDefault()</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</RepositoryUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.CommandLine" Version="4.1.0" />
+    <PackageReference Include="RavenDB.Client" Version="3.5.3" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>RavenDB user/role store management implementation for ASP.NET Core identity provider.</Description>
+    <VersionPrefix>1.3.33</VersionPrefix>
+    <Authors>Iskandar Rafiev</Authors>
+    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>Maqduni.AspNetCore.Identity.RavenDb</AssemblyName>
+    <PackageId>Maqduni.AspNetCore.Identity.RavenDb</PackageId>
+    <PackageTags>ravendb;aspnetcore;identity;membership;authentication;nosql;authorizarion</PackageTags>
+    <PackageReleaseNotes>Split RavenDB extensions off to Maqduni.RavenDb.Extensions package.</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</RepositoryUrl>
+    <NetStandardImplicitPackageVersion>1.6.1-*</NetStandardImplicitPackageVersion>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Maqduni.RavenDb.Extensions\Maqduni.RavenDb.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.0" />
+    <PackageReference Include="NuGet.CommandLine" Version="4.1.0" />
+    <PackageReference Include="RavenDB.Client" Version="3.5.3" />
+    <PackageReference Include="RavenDB.Client.UniqueConstraints" Version="3.5.3" />
+    <PackageReference Include="System.Security.Claims" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0-*" />
+  </ItemGroup>
+
+</Project>

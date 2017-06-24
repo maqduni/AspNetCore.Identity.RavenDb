@@ -1,22 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2E0B3AB7-5278-43B7-864A-3E3ED037DA69}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{940C8FFB-3CEA-434A-8BC7-312525027BFF}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Maqduni.AspNetCore.Identity.RavenDb", "src\Maqduni.AspNetCore.Identity.RavenDb\Maqduni.AspNetCore.Identity.RavenDb.xproj", "{7CE40618-FD0C-4EF9-9D7E-D1C504B6ED6D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7B042F2E-95A3-4BF9-A0C2-F94F32B370F5}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Maqduni.AspNetCore.Identity.RavenDb.Tests", "test\Maqduni.AspNetCore.Identity.RavenDb.Tests\Maqduni.AspNetCore.Identity.RavenDb.Tests.xproj", "{5A4B1801-5216-4429-8A1C-7A0F694CCD05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maqduni.AspNetCore.Identity.RavenDb", "src\Maqduni.AspNetCore.Identity.RavenDb\Maqduni.AspNetCore.Identity.RavenDb.csproj", "{7CE40618-FD0C-4EF9-9D7E-D1C504B6ED6D}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Maqduni.RavenDb.Extensions", "src\Maqduni.RavenDb.Extensions\Maqduni.RavenDb.Extensions.xproj", "{1DBD7863-AF69-415A-9E83-E5ECB7876BFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maqduni.AspNetCore.Identity.RavenDb.Tests", "test\Maqduni.AspNetCore.Identity.RavenDb.Tests\Maqduni.AspNetCore.Identity.RavenDb.Tests.csproj", "{5A4B1801-5216-4429-8A1C-7A0F694CCD05}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maqduni.RavenDb.Extensions", "src\Maqduni.RavenDb.Extensions\Maqduni.RavenDb.Extensions.csproj", "{1DBD7863-AF69-415A-9E83-E5ECB7876BFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
