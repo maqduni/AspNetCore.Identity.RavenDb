@@ -111,10 +111,10 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
         }
 
-        [Theory(DisplayName = "Role AddClaimsAsync")]
+        [Theory(DisplayName = "Role AddClaimAsync")]
         [InlineData("Admin", "GraduatedSchoolYear", "2006")]
         [InlineData("Admin", "GraduatedUniversityYear", "2010")]
-        public void RoleAddClaimsAsync(string roleName, string claimType, string claimValue)
+        public void RoleAddClaimAsync(string roleName, string claimType, string claimValue)
         {
             var role = _roleStore.FindByNameAsync(roleName).Result;
             Assert.NotNull(role);
@@ -129,18 +129,18 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
         }
 
-        [Theory(DisplayName = "Role WithClaimsRemoveClaimAsync")]
+        [Theory(DisplayName = "Role RemoveClaimAsync")]
         [InlineData("Admin", "GraduatedSchoolYear", "2006")]
         [InlineData("Admin", "GraduatedUniversityYear", "2010")]
-        public void RoleWithClaimsRemoveClaimAsync(string roleName, string claimType, string claimValue)
+        public void RoleRemoveClaimAsync(string roleName, string claimType, string claimValue)
         {
             var role = _roleStore.FindByNameAsync(roleName).Result;
             Assert.NotNull(role);
 
+            // Demonstrate that claims can be duplicated and by deleting one, all of the dupes will also be gone.
             for (int i = 0; i < 10; i++)
             {
                 var claim = new Claim(claimType, claimValue);
-
                 _roleStore.AddClaimAsync(role, claim).Wait();
             }
 
