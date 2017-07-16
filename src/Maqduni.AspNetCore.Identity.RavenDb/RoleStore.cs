@@ -375,7 +375,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
 
             await Task.FromResult(0);
 
-            var claims = role.Claims.Where(c => c.ClaimValue == claim.Value);
+            var claims = role.Claims.Where(c => c.ClaimValue == claim.Value).ToList();
             foreach (var c in claims)
             {
                 role.Claims.Remove(c);

@@ -111,6 +111,49 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
         }
 
+        [Theory(DisplayName = "Role AddClaimsAsync")]
+        [InlineData("Admin", "GraduatedSchoolYear", "2006")]
+        [InlineData("Admin", "GraduatedUniversityYear", "2010")]
+        public void RoleAddClaimsAsync(string roleName, string claimType, string claimValue)
+        {
+            var role = _roleStore.FindByNameAsync(roleName).Result;
+            Assert.NotNull(role);
+
+            var claim = new Claim(claimType, claimValue);
+            _roleStore.AddClaimAsync(role, claim).Wait();
+
+            var claims = _roleStore.GetClaimsAsync(role).Result;
+            Assert.True(claims.Any(c => c.Type.Equals(claim.Type, StringComparison.OrdinalIgnoreCase) && c.Value.Equals(claim.Value, StringComparison.OrdinalIgnoreCase)));
+
+            var result = _roleStore.UpdateAsync(role).Result;
+            Assert.True(result.Succeeded);
+        }
+
+        [Theory(DisplayName = "Role WithClaimsRemoveClaimAsync")]
+        [InlineData("Admin", "GraduatedSchoolYear", "2006")]
+        [InlineData("Admin", "GraduatedUniversityYear", "2010")]
+        public void RoleWithClaimsRemoveClaimAsync(string roleName, string claimType, string claimValue)
+        {
+            var role = _roleStore.FindByNameAsync(roleName).Result;
+            Assert.NotNull(role);
+
+            for (int i = 0; i < 10; i++)
+            {
+                var claim = new Claim(claimType, claimValue);
+
+                _roleStore.AddClaimAsync(role, claim).Wait();
+            }
+
+            var toBeRemovedClaim = new Claim(claimType, claimValue);
+            _roleStore.RemoveClaimAsync(role, toBeRemovedClaim).Wait();
+
+            var claims = _roleStore.GetClaimsAsync(role).Result;
+            Assert.False(claims.Any(c => c.Type.Equals(toBeRemovedClaim.Type, StringComparison.OrdinalIgnoreCase)));
+
+            var result = _roleStore.UpdateAsync(role).Result;
+            Assert.True(result.Succeeded);
+        }
+
         [Theory(DisplayName = "User IsInRoleAsync")]
         [InlineData("test@test.com", "User")]
         [InlineData("test@test.com", "Admin")]
