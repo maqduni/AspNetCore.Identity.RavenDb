@@ -1,5 +1,7 @@
 ﻿using Maqduni.AspNetCore.Identity.RavenDb;
+using Maqduni.AspNetCore.Identity.RavenDb.Tests.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using Maqduni.Extensions.DependencyInjection;
 using Raven.Client;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
+using System.Threading;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
 {
@@ -22,6 +25,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
         }
     }
 
+    [TestCaseOrderer("Maqduni.AspNetCore.Identity.RavenDb.Tests.Infrastructure.TestCollectionOrderer", "Maqduni.AspNetCore.Identity.RavenDb.Tests")]
     public class TestStores
     {
         private IAsyncDocumentSession _asyncSession { get; set; }
@@ -33,6 +37,8 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             _asyncSession = Store.Documents.OpenAsyncSession();
             _roleStore = new RoleStore<ApplicationRole>(_asyncSession);
             _userStore = new UserStore<ApplicationUser, ApplicationRole>(_asyncSession);
+
+            IdentityRavenDbBuilderExtensions.CreateClaimsAndLoginsIndex(typeof(ApplicationUser), Store.Documents);
         }
 
         public void Dispose()
@@ -44,62 +50,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
         }
 
 
-        [Theory(DisplayName = "User CreateAsync")]
-        [InlineData("test@test.com")]
-        public void UserCreateAsync(string email)
-        {
-            var user = _userStore.FindByEmailAsync(email).Result;
-            Assert.Null(user);
+        #region Role store tests
 
-            user = new ApplicationUser()
-            {
-                Email = email,
-                UserName = email
-            };
-
-            var result = _userStore.CreateAsync(user).Result;
-            Assert.True(result.Succeeded);
-        }
-
-        [Theory(DisplayName = "User AddToRoleAsync")]
-        [InlineData("test@test.com", "User")]
-        [InlineData("test@test.com", "Admin")]
-        public void UserAddToRoleAsync(string email, string roleName)
-        {
-            var user = _userStore.FindByEmailAsync(email).Result;
-            Assert.NotNull(user);
-
-            var role = _roleStore.FindByNameAsync(roleName).Result;
-            Assert.NotNull(role);
-
-            _userStore.AddToRoleAsync(user, roleName).Wait();
-            Assert.Contains(role.Id, user.Roles, StringComparer.OrdinalIgnoreCase);
-            Assert.Contains(user.Id, role.Users, StringComparer.OrdinalIgnoreCase);
-
-            var result = _userStore.UpdateAsync(user).Result;
-            Assert.True(result.Succeeded);
-        }
-
-        [Theory(DisplayName = "User RemoveFromRoleAsync")]
-        [InlineData("test@test.com", "User")]
-        [InlineData("test@test.com", "Admin")]
-        public void UserRemoveFromRoleAsync(string email, string roleName)
-        {
-            var user = _userStore.FindByEmailAsync(email).Result;
-            Assert.NotNull(user);
-
-            var role = _roleStore.FindByNameAsync(roleName).Result;
-            Assert.NotNull(role);
-
-            _userStore.RemoveFromRoleAsync(user, roleName).Wait();
-            Assert.DoesNotContain(role.Id, user.Roles, StringComparer.OrdinalIgnoreCase);
-            Assert.DoesNotContain(user.Id, role.Users, StringComparer.OrdinalIgnoreCase);
-            
-            var result = _userStore.UpdateAsync(user).Result;
-            Assert.True(result.Succeeded);
-        }
-
-        [Theory(DisplayName = "Role CreateAsync")]
+        [Theory(DisplayName = "Role CreateAsync"), TestOrder(1)]
         [InlineData("User")]
         [InlineData("Admin")]
         public void RoleCreateAsync(string roleName)
@@ -111,7 +64,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
         }
 
-        [Theory(DisplayName = "Role AddClaimAsync")]
+        [Theory(DisplayName = "Role AddClaimAsync"), TestOrder(2)]
         [InlineData("Admin", "GraduatedSchoolYear", "2006")]
         [InlineData("Admin", "GraduatedUniversityYear", "2010")]
         public void RoleAddClaimAsync(string roleName, string claimType, string claimValue)
@@ -129,7 +82,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
         }
 
-        [Theory(DisplayName = "Role RemoveClaimAsync")]
+        [Theory(DisplayName = "Role RemoveClaimAsync"), TestOrder(3)]
         [InlineData("Admin", "GraduatedSchoolYear", "2006")]
         [InlineData("Admin", "GraduatedUniversityYear", "2010")]
         public void RoleRemoveClaimAsync(string roleName, string claimType, string claimValue)
@@ -154,19 +107,29 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
         }
 
-        [Theory(DisplayName = "User IsInRoleAsync")]
-        [InlineData("test@test.com", "User")]
-        [InlineData("test@test.com", "Admin")]
-        public void UserIsInRoleAsync(string email, string roleName)
+        #endregion
+
+
+        #region User store tests
+
+        [Theory(DisplayName = "User CreateAsync"), TestOrder(11)]
+        [InlineData("test@test.com")]
+        public void UserCreateAsync(string email)
         {
             var user = _userStore.FindByEmailAsync(email).Result;
-            Assert.NotNull(user);
+            Assert.Null(user);
 
-            var isInRole = _userStore.IsInRoleAsync(user, roleName).Result;
-            Assert.True(isInRole);
+            user = new ApplicationUser()
+            {
+                Email = email,
+                UserName = email
+            };
+
+            var result = _userStore.CreateAsync(user).Result;
+            Assert.True(result.Succeeded);
         }
 
-        [Theory(DisplayName = "User SetPasswordHashAsync")]
+        [Theory(DisplayName = "User SetPasswordHashAsync"), TestOrder(12)]
         [InlineData("test@test.com", "sOmEhAsHbAsE64")]
         public void UserSetPasswordHashAsync(string email, string passwordHash)
         {
@@ -180,7 +143,59 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
         }
 
-        [Theory(DisplayName = "User AddClaimsAsync")]
+
+        [Theory(DisplayName = "User AddToRoleAsync"), TestOrder(21)]
+        [InlineData("test@test.com", "User")]
+        [InlineData("test@test.com", "Admin")]
+        public void UserAddToRoleAsync(string email, string roleName)
+        {
+            var user = _userStore.FindByEmailAsync(email).Result;
+            Assert.NotNull(user);
+
+            var role = _roleStore.FindByNameAsync(roleName).Result;
+            Assert.NotNull(role);
+
+            _userStore.AddToRoleAsync(user, roleName).Wait();
+            Assert.Contains(role.Id, user.Roles, StringComparer.OrdinalIgnoreCase);
+            Assert.Contains(user.Id, role.Users, StringComparer.OrdinalIgnoreCase);
+
+            var result = _userStore.UpdateAsync(user).Result;
+            Assert.True(result.Succeeded);
+        }
+
+        [Theory(DisplayName = "User IsInRoleAsync"), TestOrder(22)]
+        [InlineData("test@test.com", "User")]
+        [InlineData("test@test.com", "Admin")]
+        public void UserIsInRoleAsync(string email, string roleName)
+        {
+            var user = _userStore.FindByEmailAsync(email).Result;
+            Assert.NotNull(user);
+
+            var isInRole = _userStore.IsInRoleAsync(user, roleName).Result;
+            Assert.True(isInRole);
+        }
+
+        [Theory(DisplayName = "User RemoveFromRoleAsync"), TestOrder(23)]
+        [InlineData("test@test.com", "User")]
+        [InlineData("test@test.com", "Admin")]
+        public void UserRemoveFromRoleAsync(string email, string roleName)
+        {
+            var user = _userStore.FindByEmailAsync(email).Result;
+            Assert.NotNull(user);
+
+            var role = _roleStore.FindByNameAsync(roleName).Result;
+            Assert.NotNull(role);
+
+            _userStore.RemoveFromRoleAsync(user, roleName).Wait();
+            Assert.DoesNotContain(role.Id, user.Roles, StringComparer.OrdinalIgnoreCase);
+            Assert.DoesNotContain(user.Id, role.Users, StringComparer.OrdinalIgnoreCase);
+            
+            var result = _userStore.UpdateAsync(user).Result;
+            Assert.True(result.Succeeded);
+        }
+        
+
+        [Theory(DisplayName = "User AddClaimsAsync"), TestOrder(31)]
         [InlineData("test@test.com", "GraduatedSchoolYear", "2006")]
         [InlineData("test@test.com", "GraduatedUniversityYear", "2010")]
         public void UserAddClaimsAsync(string email, string claimType, string claimValue)
@@ -196,9 +211,23 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
 
             var result = _userStore.UpdateAsync(user).Result;
             Assert.True(result.Succeeded);
+
+            // Wait until ClaimsAndLogins index updates
+            Thread.Sleep(500);
         }
 
-        [Theory(DisplayName = "User RemoveClaimsAsync")]
+        [Theory(DisplayName = "User GetUsersForClaimAsync"), TestOrder(32)]
+        [InlineData("GraduatedSchoolYear", "2006")]
+        [InlineData("GraduatedUniversityYear", "2010")]
+        public void UserGetUsersForClaimAsync(string claimType, string claimValue)
+        {
+            var claim = new Claim(claimType, claimValue);
+
+            var user = _userStore.GetUsersForClaimAsync(claim).Result;
+            Assert.NotEmpty(user);
+        }
+
+        [Theory(DisplayName = "User RemoveClaimsAsync"), TestOrder(33)]
         [InlineData("test@test.com", "GraduatedSchoolYear", "2006")]
         [InlineData("test@test.com", "GraduatedUniversityYear", "2010")]
         public void UserRemoveClaimsAsync(string email, string claimType, string claimValue)
@@ -216,18 +245,8 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
         }
 
-        [Theory(DisplayName = "User GetUsersForClaimAsync")]
-        [InlineData("GraduatedSchoolYear", "2006")]
-        [InlineData("GraduatedUniversityYear", "2010")]
-        public void UserGetUsersForClaimAsync(string claimType, string claimValue)
-        {
-            var claim = new Claim(claimType, claimValue);
 
-            var user = _userStore.GetUsersForClaimAsync(claim).Result;
-            Assert.NotEmpty(user);
-        }
-
-        [Theory(DisplayName = "User AddLoginAsync")]
+        [Theory(DisplayName = "User AddLoginAsync"), TestOrder(41)]
         [InlineData("test@test.com", "FaceBook", "56759f85-0ad3-4fd3-86e3-a9d133fc5816", "Test User")]
         public void UserAddLoginAsync(string email, string loginProvider, string providerKey, string displayName)
         {
@@ -242,15 +261,26 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
 
             var result = _userStore.UpdateAsync(user).Result;
             Assert.True(result.Succeeded);
+
+            // Wait until ClaimsAndLogins index updates
+            Thread.Sleep(500);
         }
 
-        [Theory(DisplayName = "User RemoveLoginAsync")]
+        [Theory(DisplayName = "User FindByLoginAsync"), TestOrder(42)]
+        [InlineData("test@test.com", "FaceBook", "56759f85-0ad3-4fd3-86e3-a9d133fc5816")]
+        public void UserFindByLoginAsync(string email, string loginProvider, string providerKey)
+        {
+            var user = _userStore.FindByLoginAsync(loginProvider, providerKey).Result;
+            Assert.NotNull(user);
+        }
+
+        [Theory(DisplayName = "User RemoveLoginAsync"), TestOrder(43)]
         [InlineData("test@test.com", "FaceBook", "56759f85-0ad3-4fd3-86e3-a9d133fc5816")]
         public void UserRemoveLoginAsync(string email, string loginProvider, string providerKey)
         {
             var user = _userStore.FindByEmailAsync(email).Result;
             Assert.NotNull(user);
-            
+
             _userStore.RemoveLoginAsync(user, loginProvider, providerKey).Wait();
 
             var logins = _userStore.GetLoginsAsync(user).Result;
@@ -260,12 +290,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
         }
 
-        [Theory(DisplayName = "User FindByLoginAsync")]
-        [InlineData("test@test.com", "FaceBook", "56759f85-0ad3-4fd3-86e3-a9d133fc5816")]
-        public void UserFindByLoginAsync(string email, string loginProvider, string providerKey)
-        {
-            var user = _userStore.FindByLoginAsync(loginProvider, providerKey).Result;
-            Assert.NotNull(user);
-        }
+        #endregion
     }
 }

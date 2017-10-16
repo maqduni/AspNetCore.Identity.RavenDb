@@ -55,13 +55,22 @@ namespace Maqduni.Extensions.DependencyInjection
             {
                 throw new TypeLoadException("Service type IDocumentStore is not registered.");
             }
+            
+            CreateClaimsAndLoginsIndex(builder.UserType, documentStore);
 
-            /*
-             * Create $"{userCollectionName}/ClaimsAndLogins" Index
-             */
-            var userCollectionName = documentStore.GetDocumentKeyPrefix(builder.UserType);
+            return builder;
+        }
+
+        /// <summary>
+        /// Creates $"{userCollectionName}/ClaimsAndLogins" Index
+        /// </summary>
+        /// <param name="userType">The type representing a user.</param>
+        /// <param name="documentStore">The RavenDB document store.</param>
+        public static void CreateClaimsAndLoginsIndex(Type userType, IDocumentStore documentStore)
+        {
+            var userCollectionName = documentStore.GetDocumentKeyPrefix(userType);
             if (documentStore.DatabaseCommands.GetIndex($"{userCollectionName}/ClaimsAndLogins") != null)
-                return builder;
+                return;
 
             documentStore
                 .DatabaseCommands
@@ -91,8 +100,6 @@ select new {{
 ",
                     }
                 });
-
-            return builder;
         }
     }
 }

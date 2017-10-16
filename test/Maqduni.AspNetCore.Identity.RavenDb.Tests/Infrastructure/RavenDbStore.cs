@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Maqduni.AspNetCore.Identity.RavenDb
+namespace Maqduni.AspNetCore.Identity.RavenDb.Tests.Infrastructure
 {
     class Store
     {
