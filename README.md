@@ -1,5 +1,5 @@
-# RavenDB user/role persistent store for ASP.NET Core identity provider.
-This is the closest implementation of the user and role stores to the original EntityFramework implementaion, is well documented, and includes very useful RavenDB and RavenFS extensions. Supports **.NET Standard 1.6** and **.NET Standard 2.0**
+# RavenDB user/role persistent store for ASP.NET Core identity provider
+This is the closest implementation of the user and role stores to the original EntityFramework implementation, is well documented, and includes very useful RavenDB and RavenFS extensions. Supports **.NET Standard 1.6** and **.NET Standard 2.0**
 
 ## Installation via NuGet console
 `PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb`
@@ -47,7 +47,7 @@ public void ConfigureServices(IServiceCollection services)
 > **Note:**
 > * `DocumentStore` is a singleton and `AsyncSession` gets instantiated per HTTP request.
 > * `UniqueConstraintsStoreListener` gets always registered internally for any of the available `DocumentStore` registration methods.
-> * `"{userCollectionName}/ClaimsAndLogins"` user index by `Claim` or `Login` is created on application startup. The identity provider relies on this index to be enable user search by claims and logins.
+> * `"{userCollectionName}/ClaimsAndLogins"` user index by `Claim` or `Login` is created on the first application startup. The identity provider relies on this index to enable user search by claims and logins.
 
 ## Contribute
 Feel free to contribute to the project by either providing feedback or by forking and adding new features or fixing bugs.
