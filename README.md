@@ -8,12 +8,12 @@ This is the closest implementation of the user and role stores to the original E
 ```
 PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb
 ```
-> **Important:** Your database instance must have Unique Constaints plugin enabled. Installation instructions can be found here http://ravendb.net/docs/article-page/3.5/Csharp/server/bundles/unique-constraints
-
-Extensions are also available as a standalone package,
-```
-PM> Install-Package Maqduni.RavenDb.Extensions
-```
+> **IMPORTANT:** Your database instance must have Unique Constaints plugin enabled. Installation instructions can be found here http://ravendb.net/docs/article-page/3.5/Csharp/server/bundles/unique-constraints
+> 
+> **Note:** Extensions can also be installed as a standalone package,
+> ```
+> PM> Install-Package Maqduni.RavenDb.Extensions
+> ```
 
 ## Configuration Examples
 1. Register `AsyncSession` service with a database connection string, adds the `DocumentStore` internally with the standard configuration
