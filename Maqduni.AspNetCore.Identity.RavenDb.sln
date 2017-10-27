@@ -18,6 +18,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maqduni.AspNetCore.Identity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maqduni.RavenDb.Extensions", "src\Maqduni.RavenDb.Extensions\Maqduni.RavenDb.Extensions.csproj", "{1DBD7863-AF69-415A-9E83-E5ECB7876BFC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{1735B77A-C1DA-49F3-9191-1630806BA71E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maqduni.AspNetCore.Sample.WebApplication", "sample\Maqduni.AspNetCore.Sample.WebApplication\Maqduni.AspNetCore.Sample.WebApplication.csproj", "{BD7A9B10-38E4-4F8E-A525-4F1325D6587E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,10 @@ Global
 		{1DBD7863-AF69-415A-9E83-E5ECB7876BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DBD7863-AF69-415A-9E83-E5ECB7876BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DBD7863-AF69-415A-9E83-E5ECB7876BFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD7A9B10-38E4-4F8E-A525-4F1325D6587E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD7A9B10-38E4-4F8E-A525-4F1325D6587E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD7A9B10-38E4-4F8E-A525-4F1325D6587E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD7A9B10-38E4-4F8E-A525-4F1325D6587E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +52,7 @@ Global
 		{7CE40618-FD0C-4EF9-9D7E-D1C504B6ED6D} = {2E0B3AB7-5278-43B7-864A-3E3ED037DA69}
 		{5A4B1801-5216-4429-8A1C-7A0F694CCD05} = {7B042F2E-95A3-4BF9-A0C2-F94F32B370F5}
 		{1DBD7863-AF69-415A-9E83-E5ECB7876BFC} = {2E0B3AB7-5278-43B7-864A-3E3ED037DA69}
+		{BD7A9B10-38E4-4F8E-A525-4F1325D6587E} = {1735B77A-C1DA-49F3-9191-1630806BA71E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D51993FD-9400-4D0A-ACFE-E5FF51529785}
