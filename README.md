@@ -63,3 +63,6 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Contribute
 Feel free to contribute to the project by either providing feedback or by forking and adding new features or fixing bugs.
+
+## License
+MIT License. Copyright (c) 2017 Iskandar Rafiev
