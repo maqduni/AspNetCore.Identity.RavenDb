@@ -1,5 +1,8 @@
 # RavenDB user/role persistent store for ASP.NET Core identity provider
-This is the closest implementation of the user and role stores to the original EntityFramework implementation, is well documented, and includes very useful RavenDB and RavenFS extensions. Supports **.NET Standard 1.6** and **.NET Standard 2.0**
+ASP.NET Core Identity is a membership system which allows you to add login functionality to your application. Users can create an account and login with a user name and password or they can use an external login provider such as Facebook, Google, Microsoft Account, Twitter or others.
+You can configure ASP.NET Core Identity to use a RavenDB database to store user names, passwords, and profile data.
+
+This is the closest implementation of the user and role stores to the original EntityFramework implementation, it's well documented, and includes very useful RavenDB and RavenFS extensions. Supports **.NET Standard 1.6** and **.NET Standard 2.0**
 
 ## Installation via NuGet console
 `PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb`
