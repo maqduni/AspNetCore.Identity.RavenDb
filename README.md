@@ -8,16 +8,19 @@ You can configure ASP.NET Core Identity to use a RavenDB database to store user 
 ```
 PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb
 ```
-> **IMPORTANT:** Your database instance must have Unique Constaints plugin enabled. Installation instructions can be found here http://ravendb.net/docs/article-page/3.5/Csharp/server/bundles/unique-constraints
+> **IMPORTANT:** Your database instance must have Unique Constaints plugin enabled. Installation instructions can be found [here]( http://ravendb.net/docs/article-page/3.5/Csharp/server/bundles/unique-constraints)
 > 
 > **Note:** Extensions can also be installed as a standalone package,
 > ```
 > PM> Install-Package Maqduni.RavenDb.Extensions
 > ```
 
-Need a jump start? Refer to the sample project.
+## Usage
+#### Need a jump-start? Refer to the [sample .NET Core 2.0 web application](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/master/sample/Maqduni.AspNetCore.Sample.WebApplication)
 
-## Configuration Examples (in `Startup.cs`)
+#### For comprehensive usage examples refer to the [unit tests](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/master/test/Maqduni.AspNetCore.Identity.RavenDb.Tests)
+
+#### Configuration Examples (`Startup.cs`)
 1. Register `DocumentAsyncSession` per each HTTP request, is used to store users/roles in the database. Adds the singleton `DocumentStore` internally with the standard configuration
 
 ```cs
