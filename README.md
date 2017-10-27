@@ -50,7 +50,7 @@ public void ConfigureServices(IServiceCollection services)
 > **Note:**
 > * `DocumentStore` is a singleton and `AsyncSession` gets instantiated per HTTP request.
 > * `UniqueConstraintsStoreListener` gets always registered internally for any of the available `DocumentStore` registration methods.
-> * `"{userCollectionName}/ClaimsAndLogins"` user index by `Claim` or `Login` is created on the first application startup. The identity provider relies on this index to enable user search by claims and logins.
+> * `"{userCollectionName}/ClaimsAndLogins"` index is created on application startup if it doesn't exist in the database. The identity provider relies on this index to enable user search by claims and logins.
 
 ## Contribute
 Feel free to contribute to the project by either providing feedback or by forking and adding new features or fixing bugs.
