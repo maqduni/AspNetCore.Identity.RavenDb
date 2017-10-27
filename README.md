@@ -1,19 +1,18 @@
-# RavenDB user/role store management implementation for ASP.NET Core identity provider.
-The closest implementation of the user and role stores to the original EntityFramework implementaion. The codebase is well documented. The project also includes very useful RavenDB and RavenFS extensions.
+# RavenDB user/role persistent store for ASP.NET Core identity provider.
+This is the closest implementation of the user and role stores to the original EntityFramework implementaion, is well documented, and includes very useful RavenDB and RavenFS extensions. Supports **.NET Standard 1.6** and **.NET Standard 2.0**
 
-## Installation
+## Installation via NuGet console
 `PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb`
 
+Extensions are also available as a standalone package,
 `PM> Install-Package Maqduni.RavenDb.Extensions`
 
-## Important!
-The package requires Unique Constaints bundle to be installed in your RavenDB instance http://ravendb.net/docs/article-page/3.5/Csharp/server/bundles/unique-constraints
+> **Important:** Your database instance must have Unique Constaints plugin enabled. Installation instructions can be found here http://ravendb.net/docs/article-page/3.5/Csharp/server/bundles/unique-constraints
 
-## Usage Example
-### With implicit registration of the Raven document store
+## Usage Examples
+1. Register `AsyncSession` service with a database connection string, adds the `DocumentStore` internally with the standard configuration
 
-```
-// This method gets called by the runtime. Use this method to add services to the container.
+```cs
 public void ConfigureServices(IServiceCollection services)
 {
     // Add ravendb services.
@@ -27,21 +26,31 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-### With explicit registration of the Raven document store
-```
-// Add ravendb services.
-services.AddRavenDbDocumentStore(Configuration.GetConnectionString("RavenDb"), store => {
-    // Store configuration happens here
-});
-services.AddRavenDbAsyncSession();
+2. Register the `DocumentStore` with a database connection string (optionally customize store configuration), then register `AsyncSession` service
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    // Add ravendb services.
+    services.AddRavenDbDocumentStore(Configuration.GetConnectionString("RavenDb"), store => {
+        // Additional document store configuration can be done here
+    });
+    services.AddRavenDbAsyncSession();
+
+    services.AddIdentity<ApplicationUser, ApplicationRole>()
+        .AddRavenDbStores()
+        .AddDefaultTokenProviders();
+
+    ...
+}
 ```
 
-NOTE: 
-* UniqueConstraintsStoreListener gets registered internally for both ways of Raven document store registration.
-* $"{userCollectionName}/ClaimsAndLogins" index gets created on application startup. It is used for searching users by `Claim` or `Login`.
+> **Note:**
+> * `DocumentStore` is a singleton and `AsyncSession` gets instantiated per HTTP request.
+> * `UniqueConstraintsStoreListener` gets always registered internally for any of the available `DocumentStore` registration methods.
+> * `"{userCollectionName}/ClaimsAndLogins"` user index by `Claim` or `Login` is created on application startup. The identity provider relies on this index to be enable user search by claims and logins.
 
 ## Contribute
-Anyone is very welcome to contribute to this project by either providing their valuable feedback or by forking and adding new features or fixing bugs.
+Feel free to contribute to the project by either providing feedback or by forking and adding new features or fixing bugs.
 
 ## License
 MIT License
