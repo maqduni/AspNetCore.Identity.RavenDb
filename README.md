@@ -5,14 +5,18 @@ You can configure ASP.NET Core Identity to use a RavenDB database to store user 
 This is the closest implementation of the user and role stores to the original EntityFramework implementation, it's well documented, and includes very useful RavenDB and RavenFS extensions. Supports **.NET Standard 1.6** and **.NET Standard 2.0**
 
 ## Installation via NuGet console
-`PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb`
+```
+PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb
+```
 
 Extensions are also available as a standalone package,
-`PM> Install-Package Maqduni.RavenDb.Extensions`
+```
+PM> Install-Package Maqduni.RavenDb.Extensions
+```
 
 > **Important:** Your database instance must have Unique Constaints plugin enabled. Installation instructions can be found here http://ravendb.net/docs/article-page/3.5/Csharp/server/bundles/unique-constraints
 
-## Usage Examples
+## Configuration Examples
 1. Register `AsyncSession` service with a database connection string, adds the `DocumentStore` internally with the standard configuration
 
 ```cs
