@@ -1,5 +1,5 @@
 # RavenDB v4.0 user/role persistent store for ASP.NET Core identity provider
-The most complete and closest implementation of the user and role store to the original EntityFramework implementation, it's well documented, and includes very useful RavenDB and RavenFS extensions. Supports **.NET Standard 2.0**
+The most complete and closest implementation of the user and role store to the original EntityFramework implementation, it's well documented, and includes very useful RavenDB extensions. Supports **.NET Standard 2.0**
 
 > **Note:** For RavenDB v3.5 persistence store switch the active branch to [`3.5`](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/3.5)
 
