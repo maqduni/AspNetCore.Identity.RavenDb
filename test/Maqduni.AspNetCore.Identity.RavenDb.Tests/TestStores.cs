@@ -175,9 +175,16 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(isInRole);
         }
 
-        // TODO: Add a test for UserGetUsersInRoleAsync
+        [Theory(DisplayName = "User GetUsersInRoleAsync"), TestOrder(23)]
+        [InlineData("User")]
+        [InlineData("Admin")]
+        public void UserGetUsersInRoleAsync(string roleName)
+        {
+            var users = _userStore.GetUsersInRoleAsync(roleName).Result;
+            Assert.Contains(users, user => user.Email.Equals("test@test.com"));
+        }
 
-        [Theory(DisplayName = "User RemoveFromRoleAsync"), TestOrder(23)]
+        [Theory(DisplayName = "User RemoveFromRoleAsync"), TestOrder(24)]
         [InlineData("test@test.com", "User")]
         [InlineData("test@test.com", "Admin")]
         public void UserRemoveFromRoleAsync(string email, string roleName)
