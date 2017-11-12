@@ -3,16 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Internal;
 using Raven.Client;
 using Raven.Abstractions.Exceptions;
-using Raven.Client.UniqueConstraints;
 using Maqduni.RavenDb.Extensions;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb

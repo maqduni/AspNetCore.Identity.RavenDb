@@ -9,11 +9,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Internal;
 using Raven.Client;
-using Raven.Client.Document;
 using Maqduni.RavenDb.Extensions;
-using Raven.Client.Document.Async;
 using Raven.Abstractions.Exceptions;
 using Raven.Client.UniqueConstraints;
 using Microsoft.AspNetCore.Identity;
@@ -1218,7 +1215,8 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(nameof(normalizedRoleName));
             }
 
-            var role = await AsyncSession.LoadByUniqueConstraintAsync<TRole>(r => r.Name, normalizedRoleName);
+            // TODO: Use includes?
+            var role = await AsyncSession.LoadAsync<TRole>($"{AsyncSession.GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}");
             if (role != null)
             {
                 return await AsyncSession.LoadAsync<TUser>(role.Users);
