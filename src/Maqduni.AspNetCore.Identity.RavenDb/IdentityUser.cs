@@ -43,13 +43,13 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         /// <summary>
         /// Gets or sets the user name for this user.
         /// </summary>
-        [UniqueExchangeValue(CaseInsensitive = true)]
+        //[UniqueExchangeValue(CaseInsensitive = true)]
         public virtual string UserName { get; set; }
         
         /// <summary>
         /// Gets or sets the email address for this user.
         /// </summary>
-        [UniqueExchangeValue(CaseInsensitive = true)]
+        //[UniqueExchangeValue(CaseInsensitive = true)]
         public virtual string Email { get; set; }
         
         /// <summary>

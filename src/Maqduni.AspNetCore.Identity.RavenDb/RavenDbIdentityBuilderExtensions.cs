@@ -86,7 +86,9 @@ select new {{
     LoginProvider = """",
     ProviderKey = """",
     claim.ClaimValue, 
-    claim.ClaimType
+    claim.ClaimType,
+    user.UserName,
+    user.Email,
 }}
 ",
                         $@"
@@ -96,7 +98,9 @@ select new {{
     login.LoginProvider,
     login.ProviderKey,
     ClaimValue = """",
-    ClaimType = """"
+    ClaimType = """",
+    user.UserName,
+    user.Email,
 }}
 ",
                     }

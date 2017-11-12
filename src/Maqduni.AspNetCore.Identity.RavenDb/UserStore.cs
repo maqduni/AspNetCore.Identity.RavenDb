@@ -371,7 +371,14 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            return AsyncSession.LoadByUniqueExchangeValueAsync<TUser>(u => u.UserName, normalizedUserName);
+            //return AsyncSession.LoadByUniqueExchangeValueAsync<TUser>(u => u.UserName, normalizedUserName);
+
+            var userIdPrefix = AsyncSession.GetDocumentKeyPrefix<TUser>();
+
+            return AsyncSession.Advanced
+                .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins")
+                .WhereEquals("UserName", normalizedUserName)
+                .FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -742,10 +749,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
 
             var userIdPrefix = AsyncSession.GetDocumentKeyPrefix<TUser>();
 
-            ////TODO: This is a very inefficient function, consider writing an index
-            //var users = await AsyncSession.Advanced.LoadStartingWithAsync<TUser>($"{userIdPrefix}/", pageSize: int.MaxValue);
-            //return users.FirstOrDefault(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey));
-
             var query = AsyncSession.Advanced
                 .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins")
                 .WhereEquals("LoginProvider", loginProvider)
@@ -880,7 +883,14 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            return AsyncSession.LoadByUniqueExchangeValueAsync<TUser>(u => u.Email, normalizedEmail);
+            //return AsyncSession.LoadByUniqueExchangeValueAsync<TUser>(u => u.Email, normalizedEmail);
+
+            var userIdPrefix = AsyncSession.GetDocumentKeyPrefix<TUser>();
+
+            return AsyncSession.Advanced
+                .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins")
+                .WhereEquals("Email", normalizedEmail)
+                .FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -1217,7 +1227,10 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(nameof(normalizedRoleName));
             }
 
-            var role = await AsyncSession.LoadByUniqueExchangeValueAsync<TRole>(r => r.Name, normalizedRoleName);
+            // TODO: This is an error in 3.5, have to fix asap
+            //var role = await AsyncSession.LoadByUniqueExchangeValueAsync<TRole>(r => r.Name, normalizedRoleName);
+            var role = await AsyncSession.LoadAsync<TRole>($"{AsyncSession.GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}");
+
             if (role != null)
             {
                 return (await AsyncSession.LoadAsync<TUser>(role.Users)).Values.ToList();
