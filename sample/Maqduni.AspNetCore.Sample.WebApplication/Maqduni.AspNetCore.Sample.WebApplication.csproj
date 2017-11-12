@@ -7,16 +7,21 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Maqduni.AspNetCore.Identity.RavenDb" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" PrivateAssets="All" />
+    <PackageReference Include="RavenDB.Client" Version="4.0.0-nightly-20171111-0501" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Maqduni.AspNetCore.Identity.RavenDb\Maqduni.AspNetCore.Identity.RavenDb.csproj" />
+    <ProjectReference Include="..\..\src\Maqduni.RavenDb.Extensions\Maqduni.RavenDb.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

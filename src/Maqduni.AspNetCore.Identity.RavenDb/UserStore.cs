@@ -1196,10 +1196,6 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
 
             var userIdPrefix = AsyncSession.GetDocumentKeyPrefix<TUser>();
 
-            ////TODO: This is a very inefficient function, consider writing an index
-            //var users = (await AsyncSession.Advanced.LoadStartingWithAsync<TUser>($"{userIdPrefix}/", pageSize: int.MaxValue))
-            //    .Where(u => u.Claims.Any(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type));
-
             // TODO: Add support for large number of users
             var query = AsyncSession.Advanced
                 .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins")
@@ -1227,10 +1223,8 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(nameof(normalizedRoleName));
             }
 
-            // TODO: This is an error in 3.5, have to fix asap
-            //var role = await AsyncSession.LoadByUniqueExchangeValueAsync<TRole>(r => r.Name, normalizedRoleName);
+            // TODO: Use includes?
             var role = await AsyncSession.LoadAsync<TRole>($"{AsyncSession.GetDocumentKeyPrefix<TRole>()}/{normalizedRoleName}");
-
             if (role != null)
             {
                 return (await AsyncSession.LoadAsync<TUser>(role.Users)).Values.ToList();

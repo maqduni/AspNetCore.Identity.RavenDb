@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Maqduni.RavenDb.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Raven.Client;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;

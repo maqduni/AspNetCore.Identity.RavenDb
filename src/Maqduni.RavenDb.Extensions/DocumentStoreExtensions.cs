@@ -122,5 +122,33 @@ namespace Maqduni.RavenDb.Extensions
 
             return new Lazy<T>(() => lazy.Value.FirstOrDefault());
         }
+
+        /// <summary>
+        /// Parses connection string and assigns obtained settings to the instance of the RavenDB store.
+        /// </summary>
+        /// <param name="store">The RavenDB document store.</param>
+        /// <param name="connectionString">The connection string.</param>
+        /// <returns></returns>
+        public static void ParseConnectionString(this DocumentStoreBase store, string connectionString)
+        {
+            var settings = connectionString.Trim(';').Split(';');
+            foreach (var item in settings)
+            {
+                var splitSetting = item.Split('=');
+                switch (splitSetting[0].ToLower())
+                {
+                    case "database":
+                        store.Database = splitSetting[1].Trim();
+                        break;
+
+                    case "urls":
+                        store.Urls = splitSetting[1].Split(',');
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }

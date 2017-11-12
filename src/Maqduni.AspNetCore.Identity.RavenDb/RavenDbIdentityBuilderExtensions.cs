@@ -11,6 +11,7 @@ using Raven.Client;
 using System.Collections.Generic;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Indexes;
+using Raven.Client.Documents.Operations.Indexes;
 
 namespace Maqduni.Extensions.DependencyInjection
 {
@@ -70,13 +71,14 @@ namespace Maqduni.Extensions.DependencyInjection
         public static void CreateClaimsAndLoginsIndex(Type userType, IDocumentStore documentStore)
         {
             var userCollectionName = documentStore.GetDocumentKeyPrefix(userType);
-            if (documentStore.DatabaseCommands.GetIndex($"{userCollectionName}/ClaimsAndLogins") != null)
+            if (documentStore.Admin.Send(new GetIndexOperation($"{userCollectionName}/ClaimsAndLogins")) != null)
                 return;
 
             documentStore
-                .DatabaseCommands
-                .PutIndex($"{userCollectionName}/ClaimsAndLogins", new IndexDefinition
+                .Admin
+                .Send(new PutIndexesOperation(new IndexDefinition
                 {
+                    Name = $"{userCollectionName}/ClaimsAndLogins",
                     Maps = new HashSet<string>()
                     {
                         $@"
@@ -104,7 +106,7 @@ select new {{
 }}
 ",
                     }
-                });
+                }));
         }
     }
 }

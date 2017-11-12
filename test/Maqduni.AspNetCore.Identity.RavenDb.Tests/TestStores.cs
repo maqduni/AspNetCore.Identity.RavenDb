@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 using System.Threading;
+using Raven.Client.Documents.Session;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
 {
