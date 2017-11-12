@@ -3,8 +3,8 @@ The most complete and closest implementation of the user and role store to the o
 
 > **Note:** For RavenDB v3.5 persistence store switch the active branch to [`3.5`](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/3.5)
 
-ASP.NET Core Identity is a membership system which allows you to add login functionality to your application. Users can create an account and login with a user name and password or they can use an external login provider such as Facebook, Google, Microsoft Account, Twitter or others.
-You can configure ASP.NET Core Identity to use a RavenDB database to store user names, passwords, and profile data.
+> *ASP.NET Core Identity is a membership system which allows you to add login functionality to your application. Users can create an account and login with a user name and password or they can use an external login provider such as Facebook, Google, Microsoft Account, Twitter or others.
+You can configure ASP.NET Core Identity to use a RavenDB database to store user names, passwords, and profile data.*
 
 ## Installation via NuGet console
 ```
