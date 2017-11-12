@@ -71,8 +71,8 @@ namespace Maqduni.Extensions.DependencyInjection
         public static void CreateClaimsAndLoginsIndex(Type userType, IDocumentStore documentStore)
         {
             var userCollectionName = documentStore.GetDocumentKeyPrefix(userType);
-            if (documentStore.Admin.Send(new GetIndexOperation($"{userCollectionName}/ClaimsAndLogins")) != null)
-                return;
+            //if (documentStore.Admin.Send(new GetIndexOperation($"{userCollectionName}/ClaimsAndLogins")) != null)
+            //    return;
 
             documentStore
                 .Admin
@@ -99,6 +99,17 @@ from login in user.Logins
 select new {{
     login.LoginProvider,
     login.ProviderKey,
+    ClaimValue = """",
+    ClaimType = """",
+    user.UserName,
+    user.Email,
+}}
+",
+                        $@"
+from user in docs.{userCollectionName}
+select new {{
+    LoginProvider = """",
+    ProviderKey = """",
     ClaimValue = """",
     ClaimType = """",
     user.UserName,
