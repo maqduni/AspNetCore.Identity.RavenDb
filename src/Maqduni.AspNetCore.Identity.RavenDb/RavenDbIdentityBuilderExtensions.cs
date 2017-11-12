@@ -8,8 +8,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Maqduni.AspNetCore.Identity.RavenDb;
 using Maqduni.RavenDb.Extensions;
 using Raven.Client;
-using Raven.Abstractions.Indexing;
 using System.Collections.Generic;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Indexes;
 
 namespace Maqduni.Extensions.DependencyInjection
 {

@@ -11,12 +11,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Internal;
 using Raven.Client;
-using Raven.Client.Document;
+using Raven.Client.Documents;
 using Maqduni.RavenDb.Extensions;
-using Raven.Client.Document.Async;
-using Raven.Abstractions.Exceptions;
-using Raven.Client.UniqueConstraints;
 using Microsoft.AspNetCore.Identity;
+using Raven.Client.Exceptions;
+using Raven.Client.Documents.Session;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb
 {
@@ -372,7 +371,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            return AsyncSession.LoadByUniqueConstraintAsync<TUser>(u => u.UserName, normalizedUserName);
+            return AsyncSession.LoadByUniqueExchangeValueAsync<TUser>(u => u.UserName, normalizedUserName);
         }
 
         /// <summary>
@@ -496,7 +495,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(nameof(user));
             }
             var roles = await AsyncSession.LoadAsync<TRole>(user.Roles);
-            return await Task.FromResult(roles.Select(r => r.Name).ToList());
+            return await Task.FromResult(roles.Values.Select(r => r.Name).ToList());
         }
 
         /// <summary>
@@ -748,7 +747,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
             //return users.FirstOrDefault(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey));
 
             var query = AsyncSession.Advanced
-                .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins", false)
+                .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins")
                 .WhereEquals("LoginProvider", loginProvider)
                 .AndAlso().WhereEquals("ProviderKey", providerKey);
 
@@ -881,7 +880,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            return AsyncSession.LoadByUniqueConstraintAsync<TUser>(u => u.Email, normalizedEmail);
+            return AsyncSession.LoadByUniqueExchangeValueAsync<TUser>(u => u.Email, normalizedEmail);
         }
 
         /// <summary>
@@ -1193,7 +1192,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
 
             // TODO: Add support for large number of users
             var query = AsyncSession.Advanced
-                .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins", false)
+                .AsyncDocumentQuery<TUser>($"{userIdPrefix}/ClaimsAndLogins")
                 .WhereEquals("ClaimValue", claim.Value)
                 .AndAlso().WhereEquals("ClaimType", claim.Type)
                 .Take(1024);
@@ -1218,10 +1217,10 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
                 throw new ArgumentNullException(nameof(normalizedRoleName));
             }
 
-            var role = await AsyncSession.LoadByUniqueConstraintAsync<TRole>(r => r.Name, normalizedRoleName);
+            var role = await AsyncSession.LoadByUniqueExchangeValueAsync<TRole>(r => r.Name, normalizedRoleName);
             if (role != null)
             {
-                return await AsyncSession.LoadAsync<TUser>(role.Users);
+                return (await AsyncSession.LoadAsync<TUser>(role.Users)).Values.ToList();
             }
             return new List<TUser>();
         }

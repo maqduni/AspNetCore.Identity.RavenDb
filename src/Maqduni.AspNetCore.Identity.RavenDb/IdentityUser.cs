@@ -1,7 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Raven.Client.UniqueConstraints;
+using Maqduni.RavenDb.Extensions;
 using System;
 using System.Collections.Generic;
 
@@ -43,13 +43,13 @@ namespace Maqduni.AspNetCore.Identity.RavenDb
         /// <summary>
         /// Gets or sets the user name for this user.
         /// </summary>
-        [UniqueConstraint(CaseInsensitive = true)]
+        [UniqueExchangeValue(CaseInsensitive = true)]
         public virtual string UserName { get; set; }
         
         /// <summary>
         /// Gets or sets the email address for this user.
         /// </summary>
-        [UniqueConstraint(CaseInsensitive = true)]
+        [UniqueExchangeValue(CaseInsensitive = true)]
         public virtual string Email { get; set; }
         
         /// <summary>

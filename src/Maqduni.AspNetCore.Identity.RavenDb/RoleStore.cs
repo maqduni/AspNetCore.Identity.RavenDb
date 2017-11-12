@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Internal;
 using Raven.Client;
-using Raven.Abstractions.Exceptions;
-using Raven.Client.UniqueConstraints;
 using Maqduni.RavenDb.Extensions;
+using Raven.Client.Documents.Session;
+using Raven.Client.Exceptions;
 
 namespace Maqduni.AspNetCore.Identity.RavenDb
 {

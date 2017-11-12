@@ -28,8 +28,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
     <PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
-    <PackageReference Include="RavenDB.Client" Version="3.5.5-patch-35223" />
-    <PackageReference Include="RavenDB.Client.UniqueConstraints" Version="3.5.5-patch-35223" />
+    <PackageReference Include="RavenDB.Client" Version="4.0.0-nightly-20171111-0501" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
   </ItemGroup>

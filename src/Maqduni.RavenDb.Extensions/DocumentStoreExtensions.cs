@@ -1,4 +1,6 @@
 ﻿using Raven.Client;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +22,10 @@ namespace Maqduni.RavenDb.Extensions
         /// <returns></returns>
         public static string GetDocumentKeyPrefix(this IDocumentStore store, object entity)
         {
-            var typeTagName = store.Conventions.GetDynamicTagName(entity);
+            var typeTagName = store.Conventions.GetCollectionName(entity);
             if (string.IsNullOrEmpty(typeTagName)) //ignore empty tags
                 return null;
-            var tag = store.Conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
+            var tag = store.Conventions.TransformTypeCollectionNameToDocumentIdPrefix(typeTagName);
             return tag;
         }
 
@@ -66,10 +68,10 @@ namespace Maqduni.RavenDb.Extensions
         /// <returns></returns>
         public static string GetDocumentKeyPrefix(this IDocumentStore store, Type entityType)
         {
-            var typeTagName = store.Conventions.GetTypeTagName(entityType);
+            var typeTagName = store.Conventions.GetCollectionName(entityType);
             if (string.IsNullOrEmpty(typeTagName)) //ignore empty tags
                 return null;
-            var tag = store.Conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
+            var tag = store.Conventions.TransformTypeCollectionNameToDocumentIdPrefix(typeTagName);
             return tag;
         }
 
@@ -84,28 +86,28 @@ namespace Maqduni.RavenDb.Extensions
             return GetDocumentKeyPrefix(session.Advanced.DocumentStore, entityType);
         }
 
-        /// <summary>
-        /// Appends the collection name and returns the full path to the document.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="store">The RavenDB document store.</param>
-        /// <param name="partialId">Partial path of the document (the part that usually follows the collection name).</param>
-        /// <returns></returns>
-        public static string GetFullDocumentKey<T>(this IDocumentStore store, object partialId)
-        {
-            return store.Conventions.FindFullDocumentKeyFromNonStringIdentifier(partialId, typeof(T), false);
-        }
+        ///// <summary>
+        ///// Appends the collection name and returns the full path to the document.
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="store">The RavenDB document store.</param>
+        ///// <param name="partialId">Partial path of the document (the part that usually follows the collection name).</param>
+        ///// <returns></returns>
+        //public static string GetFullDocumentKey<T>(this IDocumentStore store, object partialId)
+        //{
+        //    return store.Conventions.FindFullDocumentKeyFromNonStringIdentifier(partialId, typeof(T), false);
+        //}
 
-        /// <summary>
-        /// Omits the collection name and returns the partial part of the document path.
-        /// </summary>
-        /// <param name="store">The RavenDB document store.</param>
-        /// <param name="fullId">Full path of the document.</param>
-        /// <returns></returns>
-        public static string GetPartialDocumentKey(this IDocumentStore store, string fullId)
-        {
-            return store.Conventions.FindIdValuePartForValueTypeConversion(null, fullId);
-        }
+        ///// <summary>
+        ///// Omits the collection name and returns the partial part of the document path.
+        ///// </summary>
+        ///// <param name="store">The RavenDB document store.</param>
+        ///// <param name="fullId">Full path of the document.</param>
+        ///// <returns></returns>
+        //public static string GetPartialDocumentKey(this IDocumentStore store, string fullId)
+        //{
+        //    return store.Conventions.FindIdValuePartForValueTypeConversion(null, fullId);
+        //}
 
         /// <summary>
         /// Returns the first available result of T from a lazy query, otherwise null.
