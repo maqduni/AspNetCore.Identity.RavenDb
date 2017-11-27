@@ -1,22 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Very useful RavenDB and RavenFS extensions.</Description>
+    <Description>Very useful RavenDB extensions.</Description>
     <Authors>Iskandar Rafiev</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Maqduni.RavenDb.Extensions</AssemblyName>
     <PackageId>Maqduni.RavenDb.Extensions</PackageId>
     <PackageTags>ravendb;aspnetcore;ravenfs;filesystem;nosql;extensions</PackageTags>
-    <PackageReleaseNotes>Upgraded to .NET Standard 2.0, RavenDB 3.5.5-patch-35223. Added order to unit tests. Removed .NET Framework from target frameworks.</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgraded to RavenDB 4.0.0-nightly-20171126-0501.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</RepositoryUrl>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <Version>1.1.0</Version>
+    <Version>2.0.0-rc-nightly-20171126-0501</Version>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
@@ -26,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
-    <PackageReference Include="RavenDB.Client" Version="4.0.0-nightly-20171111-0501" />
+    <PackageReference Include="RavenDB.Client" Version="4.0.0-nightly-20171126-0501" />
   </ItemGroup>
 
 </Project>

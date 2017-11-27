@@ -42,7 +42,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             IdentityRavenDbBuilderExtensions.CreateClaimsAndLoginsIndex(typeof(ApplicationUser), Store.Documents);
         }
 
-        public void Dispose()
+        internal void Dispose()
         {
             _userStore.Dispose();
             _roleStore.Dispose();
@@ -77,7 +77,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             _roleStore.AddClaimAsync(role, claim).Wait();
 
             var claims = _roleStore.GetClaimsAsync(role).Result;
-            Assert.True(claims.Any(c => c.Type.Equals(claim.Type, StringComparison.OrdinalIgnoreCase) && c.Value.Equals(claim.Value, StringComparison.OrdinalIgnoreCase)));
+            Assert.Contains(claims, c => c.Type.Equals(claim.Type, StringComparison.OrdinalIgnoreCase) && c.Value.Equals(claim.Value, StringComparison.OrdinalIgnoreCase));
 
             var result = _roleStore.UpdateAsync(role).Result;
             Assert.True(result.Succeeded);
@@ -102,7 +102,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             _roleStore.RemoveClaimAsync(role, toBeRemovedClaim).Wait();
 
             var claims = _roleStore.GetClaimsAsync(role).Result;
-            Assert.False(claims.Any(c => c.Type.Equals(toBeRemovedClaim.Type, StringComparison.OrdinalIgnoreCase)));
+            Assert.DoesNotContain(claims, c => c.Type.Equals(toBeRemovedClaim.Type, StringComparison.OrdinalIgnoreCase));
 
             var result = _roleStore.UpdateAsync(role).Result;
             Assert.True(result.Succeeded);
@@ -217,7 +217,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             _userStore.AddClaimsAsync(user, new List<Claim>() { claim }).Wait();
 
             var claims = _userStore.GetClaimsAsync(user).Result;
-            Assert.True(claims.Any(c => c.Type.Equals(claim.Type, StringComparison.OrdinalIgnoreCase) && c.Value.Equals(claim.Value, StringComparison.OrdinalIgnoreCase)));
+            Assert.Contains(claims, c => c.Type.Equals(claim.Type, StringComparison.OrdinalIgnoreCase) && c.Value.Equals(claim.Value, StringComparison.OrdinalIgnoreCase));
 
             var result = _userStore.UpdateAsync(user).Result;
             Assert.True(result.Succeeded);
@@ -249,7 +249,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             _userStore.RemoveClaimsAsync(user, new List<Claim>() { claim }).Wait();
 
             var claims = _userStore.GetClaimsAsync(user).Result;
-            Assert.False(claims.Any(c => c.Type.Equals(claim.Type, StringComparison.OrdinalIgnoreCase)));
+            Assert.DoesNotContain(claims, c => c.Type.Equals(claim.Type, StringComparison.OrdinalIgnoreCase));
 
             var result = _userStore.UpdateAsync(user).Result;
             Assert.True(result.Succeeded);
@@ -267,7 +267,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             _userStore.AddLoginAsync(user, login).Wait();
 
             var logins = _userStore.GetLoginsAsync(user).Result;
-            Assert.True(logins.Any(l => l.LoginProvider.Equals(login.LoginProvider, StringComparison.OrdinalIgnoreCase) && l.ProviderKey.Equals(login.ProviderKey, StringComparison.OrdinalIgnoreCase)));
+            Assert.Contains(logins, l => l.LoginProvider.Equals(login.LoginProvider, StringComparison.OrdinalIgnoreCase) && l.ProviderKey.Equals(login.ProviderKey, StringComparison.OrdinalIgnoreCase));
 
             var result = _userStore.UpdateAsync(user).Result;
             Assert.True(result.Succeeded);
@@ -282,6 +282,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
         {
             var user = _userStore.FindByLoginAsync(loginProvider, providerKey).Result;
             Assert.NotNull(user);
+            Assert.Equal(email, user.Email);
         }
 
         [Theory(DisplayName = "User RemoveLoginAsync"), TestOrder(43)]
@@ -294,7 +295,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             _userStore.RemoveLoginAsync(user, loginProvider, providerKey).Wait();
 
             var logins = _userStore.GetLoginsAsync(user).Result;
-            Assert.False(logins.Any(l => l.LoginProvider.Equals(loginProvider, StringComparison.OrdinalIgnoreCase) && l.ProviderKey.Equals(providerKey, StringComparison.OrdinalIgnoreCase)));
+            Assert.DoesNotContain(logins, l => l.LoginProvider.Equals(loginProvider, StringComparison.OrdinalIgnoreCase) && l.ProviderKey.Equals(providerKey, StringComparison.OrdinalIgnoreCase));
 
             var result = _userStore.UpdateAsync(user).Result;
             Assert.True(result.Succeeded);

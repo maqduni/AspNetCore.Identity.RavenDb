@@ -75,7 +75,7 @@ namespace Maqduni.Extensions.DependencyInjection
             //    return;
 
             documentStore
-                .Admin
+                .Maintenance
                 .Send(new PutIndexesOperation(new IndexDefinition
                 {
                     Name = $"{userCollectionName}/ClaimsAndLogins",

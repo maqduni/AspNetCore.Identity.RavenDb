@@ -8,14 +8,14 @@
     <AssemblyName>Maqduni.AspNetCore.Identity.RavenDb</AssemblyName>
     <PackageId>Maqduni.AspNetCore.Identity.RavenDb</PackageId>
     <PackageTags>ravendb;aspnetcore;identity;membership;authentication;nosql;authorizarion</PackageTags>
-    <PackageReleaseNotes>Upgraded to .NET Standard 2.0, RavenDB 3.5.5-patch-35223. Added order to unit tests. Removed .NET Framework from target frameworks.</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgraded to RavenDB 4.0.0-nightly-20171126-0501.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</RepositoryUrl>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <Version>1.4.0</Version>
+    <Version>2.0.0-rc-nightly-20171126-0501</Version>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -28,7 +28,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
     <PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
-    <PackageReference Include="RavenDB.Client" Version="4.0.0-nightly-20171111-0501" />
+    <PackageReference Include="RavenDB.Client" Version="4.0.0-nightly-20171126-0501" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
   </ItemGroup>
