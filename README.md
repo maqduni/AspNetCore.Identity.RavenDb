@@ -1,5 +1,8 @@
 # RavenDB v4.0 user/role persistent store for ASP.NET Core identity provider
+
 The most complete and closest implementation of the user and role store to the original EntityFramework implementation, it's well documented, and includes very useful RavenDB extensions. Supports **.NET Standard 2.0**
+
+[![NuGet](https://img.shields.io/nuget/dt/Maqduni.AspNetCore.Identity.RavenDb.svg)](https://www.nuget.org/packages/Maqduni.AspNetCore.Identity.RavenDb/) [![GitHub license](https://img.shields.io/github/license/maqduni/AspNetCore.Identity.RavenDb.svg)](https://github.com/maqduni/AspNetCore.Identity.RavenDb/blob/4.0/LICENSE)
 
 > **Note:** For RavenDB v3.5 persistence store switch the active branch to [`3.5`](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/3.5)
 
@@ -44,6 +47,3 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Contribute
 Feel free to contribute to the project by either providing feedback or by forking and adding new features or fixing bugs.
-
-## License
-MIT License. Copyright (c) 2017 Iskandar Rafiev
