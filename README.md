@@ -2,9 +2,9 @@
 
 The most complete and closest implementation of the user and role store to the original EntityFramework implementation, it's well documented, and includes very useful RavenDB extensions. Supports **.NET Standard 2.0**
 
-[![NuGet](https://img.shields.io/nuget/dt/Maqduni.AspNetCore.Identity.RavenDb.svg)](https://www.nuget.org/packages/Maqduni.AspNetCore.Identity.RavenDb/) [![GitHub license](https://img.shields.io/github/license/maqduni/AspNetCore.Identity.RavenDb.svg)](https://github.com/maqduni/AspNetCore.Identity.RavenDb/blob/4.0/LICENSE)
+[![NuGet](https://img.shields.io/nuget/dt/Maqduni.AspNetCore.Identity.RavenDb.svg)](https://www.nuget.org/packages/Maqduni.AspNetCore.Identity.RavenDb/) [![GitHub license](https://img.shields.io/github/license/maqduni/AspNetCore.Identity.RavenDb.svg)](https://github.com/maqduni/AspNetCore.Identity.RavenDb/blob/v2.x/LICENSE)
 
-> **Note:** For RavenDB v3.5 persistence store switch the active branch to [`3.5`](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/3.5)
+> **Note:** For RavenDB v3.5 persistence store switch the active branch to [`v1.x`](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/v1.x)
 
 > *ASP.NET Core Identity is a membership system which allows you to add login functionality to your application. Users can create an account and login with a user name and password or they can use an external login provider such as Facebook, Google, Microsoft Account, Twitter or others.
 You can configure ASP.NET Core Identity to use a RavenDB database to store user names, passwords, and profile data.*
@@ -19,9 +19,9 @@ PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb -IncludePrerelease
 > ```
 
 ## Usage
-#### Need a jump-start? Refer to the [sample .NET Core 2.0 web application](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/4.0/sample/Maqduni.AspNetCore.Sample.WebApplication)
+#### Need a jump-start? Refer to the [sample .NET Core 2.0 web application](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/v2.x/sample/Maqduni.AspNetCore.Sample.WebApplication)
 
-#### For comprehensive usage examples refer to the [unit tests](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/4.0/test/Maqduni.AspNetCore.Identity.RavenDb.Tests)
+#### For comprehensive usage examples refer to the [unit tests](https://github.com/maqduni/AspNetCore.Identity.RavenDb/tree/v2.x/test/Maqduni.AspNetCore.Identity.RavenDb.Tests)
 
 #### Configuration Example (`Startup.cs`)
 Register `DocumentAsyncSession` per each HTTP request, is used to store users/roles in the database. Adds the singleton `DocumentStore` internally.
