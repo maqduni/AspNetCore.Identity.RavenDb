@@ -11,11 +11,11 @@ You can configure ASP.NET Core Identity to use a RavenDB database to store user 
 
 ## Installation via NuGet console
 ```
-PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb -IncludePrerelease
+PM> Install-Package Maqduni.AspNetCore.Identity.RavenDb
 ```
 > **Note:** Extensions can also be installed as a standalone package,
 > ```
-> PM> Install-Package Maqduni.RavenDb.Extensions -IncludePrerelease
+> PM> Install-Package Maqduni.RavenDb.Extensions
 > ```
 
 ## Usage

@@ -128,6 +128,9 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
 
             var result = _userStore.CreateAsync(user).Result;
             Assert.True(result.Succeeded);
+
+            // Wait until ClaimsAndLogins index updates
+            Thread.Sleep(1000);
         }
 
         [Theory(DisplayName = "User SetPasswordHashAsync"), TestOrder(12)]
@@ -223,7 +226,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
 
             // Wait until ClaimsAndLogins index updates
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
         }
 
         [Theory(DisplayName = "User GetUsersForClaimAsync"), TestOrder(32)]
@@ -273,7 +276,7 @@ namespace Maqduni.AspNetCore.Identity.RavenDb.Tests
             Assert.True(result.Succeeded);
 
             // Wait until ClaimsAndLogins index updates
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
         }
 
         [Theory(DisplayName = "User FindByLoginAsync"), TestOrder(42)]
