@@ -20,10 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Maqduni.RavenDb.Extensions\Maqduni.RavenDb.Extensions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Maqduni.RavenDb.Extensions" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
