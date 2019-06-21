@@ -3,29 +3,33 @@
   <PropertyGroup>
     <Description>RavenDB user/role store management implementation for ASP.NET Core identity provider.</Description>
     <Authors>Iskandar Rafiev</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Maqduni.AspNetCore.Identity.RavenDb</AssemblyName>
     <PackageId>Maqduni.AspNetCore.Identity.RavenDb</PackageId>
     <PackageTags>ravendb;aspnetcore;identity;membership;authentication;nosql;authorizarion</PackageTags>
-    <PackageReleaseNotes>Upgraded to RavenDB 4.0.1.</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgraded to RavenDB 4.2.0</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</RepositoryUrl>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <Version>2.0.1</Version>
+    <Version>4.2.0</Version>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Maqduni.RavenDb.Extensions" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
-    <PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
-    <PackageReference Include="RavenDB.Client" Version="4.0.1" />
+    <PackageReference Include="Maqduni.RavenDb.Extensions" Version="4.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="NuGet.CommandLine" Version="5.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="RavenDB.Client" Version="4.2.0" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
   </ItemGroup>

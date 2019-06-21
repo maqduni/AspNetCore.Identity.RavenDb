@@ -3,22 +3,20 @@
   <PropertyGroup>
     <Description>Very useful RavenDB extensions.</Description>
     <Authors>Iskandar Rafiev</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Maqduni.RavenDb.Extensions</AssemblyName>
     <PackageId>Maqduni.RavenDb.Extensions</PackageId>
     <PackageTags>ravendb;aspnetcore;ravenfs;filesystem;nosql;extensions</PackageTags>
-    <PackageReleaseNotes>Upgraded to RavenDB 4.0.1.</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgraded to RavenDB 4.2.0</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</RepositoryUrl>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <RepositoryUrl>https://github.com/maqduni/AspNetCore.Identity.RavenDb</RepositoryUrl>    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <Version>2.0.1</Version>
+    <Version>4.2.0</Version>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
@@ -27,8 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
-    <PackageReference Include="RavenDB.Client" Version="4.0.1" />
+    <PackageReference Include="NuGet.CommandLine" Version="5.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="RavenDB.Client" Version="4.2.0" />
   </ItemGroup>
 
 </Project>
